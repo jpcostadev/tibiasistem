@@ -1,0 +1,38 @@
+:root {
+  --branco-1: #ffffff;
+  --preto-1: #1b1b1b;
+  --cinza-1: #161b22;
+  --cinza-2: #8b949e;
+  --verde-1: #238636;
+  --azul-1: #388bfd;
+  --amarelo-1: #d4af37;
+  --vermelho-1: #da3633;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+  font-size: 62.5%;
+}
+
+body {
+  background-color: var(--cinza-1);
+  color: var(--branco-1);
+  font-family: "Poppins", sans-serif;
+  font-size: 1.6rem;
+}
+
+ul {
+  list-style: none;
+}
+a {
+  color: var(--branco-1);
+}
+
+.container {
+  max-width: 140rem;
+  margin: 0 auto;
+}

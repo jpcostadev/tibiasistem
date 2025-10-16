@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  height: 60px;
+}
+.menu {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.links {
+  display: flex;
+  gap: 1rem;
+}
