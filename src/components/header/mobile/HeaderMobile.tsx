@@ -18,8 +18,12 @@ const HeaderMobile = () => {
 
         {openMenu && (
           <ul className={style.mobileLinks}>
-            <Link to={"/"}>Bosses</Link>
-            <Link to={"/ranking"}>Ranking</Link>
+            <Link onClick={() => setOpenMenu(false)} to={"/"}>
+              Bosses
+            </Link>
+            <Link onClick={() => setOpenMenu(false)} to={"/ranking"}>
+              Ranking
+            </Link>
           </ul>
         )}
       </nav>
