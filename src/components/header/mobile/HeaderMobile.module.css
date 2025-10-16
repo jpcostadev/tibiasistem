@@ -1,6 +1,10 @@
 .headerMobile {
   position: relative;
   background-color: var(--preto-1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
 .menuMobile {
   display: flex;

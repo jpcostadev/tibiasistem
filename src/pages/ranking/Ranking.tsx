@@ -1,9 +1,9 @@
 import React from "react";
 import style from "./Ranking.module.css";
 
-const URL_API_GUILDA = "https://api.tibiadata.com/v4/guild/New%20Coorporative";
+const URL_API_GUILDA = "https://api.tibiadata.com/v4/guild/New Coorporative";
 
-type Membros = {
+type Membro = {
   name: string;
   title?: string;
   rank: string;
@@ -14,41 +14,42 @@ type Membros = {
 };
 
 const Ranking = () => {
-  const [membros, setMembros] = React.useState<Membros[]>([]);
-  const [currentPage, setCurrentPage] = React.useState(1);
+  const [membros, setMembros] = React.useState<Membro[]>([]);
+  const [paginaAtual, setPaginaAtual] = React.useState(1);
   const [filtroNome, setFiltroNome] = React.useState("");
-  const membersPerPage = 15;
+  const membrosPorPagina = 15;
 
   React.useEffect(() => {
-    async function buscarPlayers() {
+    async function buscarMembros() {
       try {
-        const response = await fetch(URL_API_GUILDA);
-        const json = await response.json();
-        const membrosData: Membros[] = json.guild.members;
-        setMembros(membrosData);
-      } catch (error) {
-        console.error("Erro ao buscar membros:", error);
+        const resposta = await fetch(URL_API_GUILDA);
+        const dados = await resposta.json();
+        const membrosDaGuilda: Membro[] = dados.guild.members;
+        setMembros(membrosDaGuilda);
+      } catch (erro) {
+        console.error("Erro ao buscar membros:", erro);
       }
     }
 
-    buscarPlayers();
+    buscarMembros();
   }, []);
 
   const membrosFiltrados = membros.filter((membro) =>
     membro.name.toLowerCase().includes(filtroNome.toLowerCase()),
   );
 
-  const indexOfLastMember = currentPage * membersPerPage;
-  const indexOfFirstMember = indexOfLastMember - membersPerPage;
-  const currentMembers = membrosFiltrados.slice(
-    indexOfFirstMember,
-    indexOfLastMember,
+  const indiceUltimoMembro = paginaAtual * membrosPorPagina;
+  const indicePrimeiroMembro = indiceUltimoMembro - membrosPorPagina;
+  const membrosDaPagina = membrosFiltrados.slice(
+    indicePrimeiroMembro,
+    indiceUltimoMembro,
   );
 
-  const totalPages = Math.ceil(membrosFiltrados.length / membersPerPage);
+  const totalPaginas = Math.ceil(membrosFiltrados.length / membrosPorPagina);
 
+  // Sempre volta para a página 1 ao digitar no filtro
   React.useEffect(() => {
-    setCurrentPage(1);
+    setPaginaAtual(1);
   }, [filtroNome]);
 
   return (
@@ -67,16 +68,16 @@ const Ranking = () => {
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Level</th>
+            <th>Nível</th>
             <th>Vocação</th>
             <th>Status</th>
-            <th>Rank</th>
-            <th>Title</th>
+            <th>Patente</th>
+            <th>Título</th>
           </tr>
         </thead>
         <tbody>
-          {currentMembers.map((membro, index) => (
-            <tr key={index} className={style.cardMembros}>
+          {membrosDaPagina.map((membro, indice) => (
+            <tr key={indice} className={style.cardMembros}>
               <td>{membro.name}</td>
               <td>{membro.level}</td>
               <td>{membro.vocation}</td>
@@ -90,19 +91,21 @@ const Ranking = () => {
 
       <div className={style.pagination}>
         <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
+          onClick={() =>
+            setPaginaAtual((anterior) => Math.max(anterior - 1, 1))
+          }
+          disabled={paginaAtual === 1}
         >
           Anterior
         </button>
         <span>
-          Página {currentPage} de {totalPages || 1}
+          Página {paginaAtual} de {totalPaginas || 1}
         </span>
         <button
           onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            setPaginaAtual((anterior) => Math.min(anterior + 1, totalPaginas))
           }
-          disabled={currentPage === totalPages}
+          disabled={paginaAtual === totalPaginas}
         >
           Próxima
         </button>

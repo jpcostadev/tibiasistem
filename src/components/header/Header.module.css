@@ -1,8 +1,11 @@
 .header {
   display: flex;
   height: 60px;
-  padding: 0 12rem;
   background-color: var(--preto-1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 .menu {
   display: flex;
@@ -10,6 +13,7 @@
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
+  padding: 0 14rem;
 }
 .links {
   display: flex;

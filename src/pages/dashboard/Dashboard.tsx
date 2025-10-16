@@ -1,10 +1,11 @@
 import React from "react";
+import style from "./Dashboard.module.css";
 
 const Dashboard = () => {
   return (
-    <div>
+    <section className={style.dashContainer}>
       <p>Aqui pode vir o que eu quiser</p>
-    </div>
+    </section>
   );
 };
 

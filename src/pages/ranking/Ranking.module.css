@@ -2,6 +2,7 @@
   padding: 2rem;
   background-color: var(--preto-1);
   color: var(--branco);
+  min-height: calc(100vh - 60px);
 }
 
 .table {

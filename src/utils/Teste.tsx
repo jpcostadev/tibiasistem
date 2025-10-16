@@ -5,6 +5,7 @@ type TesteProps = {
   nome: string;
   idade: number;
 };
+
 const Teste = () => {
   const [json, setJson] = React.useState<TesteProps[] | null>(null);
 

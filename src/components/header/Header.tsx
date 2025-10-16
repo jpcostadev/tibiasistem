@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className={style.header}>
-      <nav className={style.menu}>
+      <nav className={`${style.menu} container`}>
         <h1>Logo</h1>
         <ul className={style.links}>
           <Link to={"/"}>Bosses</Link>
