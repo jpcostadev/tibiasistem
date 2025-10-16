@@ -18,7 +18,6 @@ function App() {
     <UserContextProvider>
       <BrowserRouter>
         {isMobile ? <HeaderMobile /> : <Header />}
-
         <Container>
           <Routes>
             <Route path="/" element={<Dashboard />} />

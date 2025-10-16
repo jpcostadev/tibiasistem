@@ -90,14 +90,17 @@ const Ranking = () => {
       </table>
 
       <div className={style.pagination}>
-        <button
-          onClick={() =>
-            setPaginaAtual((anterior) => Math.max(anterior - 1, 1))
-          }
-          disabled={paginaAtual === 1}
-        >
-          Anterior
-        </button>
+        {paginaAtual !== 1 && (
+          <button
+            onClick={() =>
+              setPaginaAtual((anterior) => Math.max(anterior - 1, 1))
+            }
+            disabled={paginaAtual === 1}
+          >
+            Anterior
+          </button>
+        )}
+
         <span>
           Página {paginaAtual} de {totalPaginas || 1}
         </span>
