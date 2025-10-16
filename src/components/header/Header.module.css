@@ -1,6 +1,8 @@
 .header {
   display: flex;
   height: 60px;
+  padding: 0 12rem;
+  background-color: var(--preto-1);
 }
 .menu {
   display: flex;

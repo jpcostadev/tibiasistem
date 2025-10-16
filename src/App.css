@@ -30,9 +30,16 @@ ul {
 }
 a {
   color: var(--branco-1);
+  text-decoration: none;
 }
 
 .container {
   max-width: 140rem;
   margin: 0 auto;
+}
+
+@media (max-width: 920px) {
+  .container {
+    padding: 0 2rem;
+  }
 }

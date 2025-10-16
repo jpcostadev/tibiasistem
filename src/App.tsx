@@ -7,13 +7,17 @@ import Ranking from "./pages/ranking/Ranking";
 import { UiContext } from "./contexts/UiContext";
 import { UserContextProvider } from "./contexts/UserContext";
 import Container from "./utils/Container";
+import useMedia from "./hooks/useMedia";
+import HeaderMobile from "./components/header/mobile/HeaderMobile";
 
 function App() {
+  const isMobile = useMedia("(max-width: 920px)");
+  console.log(isMobile);
   return (
     <UserContextProvider>
       <BrowserRouter>
+        {isMobile ? <HeaderMobile /> : <Header />}
         <Container>
-          <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/ranking" element={<Ranking />} />

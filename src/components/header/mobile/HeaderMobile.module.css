@@ -1,0 +1,60 @@
+.headerMobile {
+  position: relative;
+  background-color: var(--preto-1);
+}
+.menuMobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 60px;
+}
+
+.btnMenu {
+  background: none;
+  border: none;
+  height: max-content;
+  padding: 0.5rem 1.3rem;
+  background-color: var(--amarelo-1);
+  color: var(--preto-1);
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.mobileLinks {
+  position: absolute;
+  width: 80%;
+  top: 60px;
+  right: 0;
+  background-color: var(--preto-1);
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-radius: 10px;
+  padding: 1rem;
+  animation: entrarAnimado 0.5s forwards;
+}
+.mobileLinks a {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.3s;
+  font-weight: 600;
+}
+.mobileLinks a:hover,
+.mobileLinks a:active {
+  background-color: var(--amarelo-1);
+  border-radius: 50px;
+  color: var(--preto-1);
+}
+
+@keyframes entrarAnimado {
+  from {
+    opacity: 0;
+    right: -100px;
+  }
+  to {
+    opacity: 1;
+    right: 0;
+  }
+}
