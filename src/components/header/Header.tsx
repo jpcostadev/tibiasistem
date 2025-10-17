@@ -24,6 +24,11 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
+  // Forçar re-render quando login ou data mudarem
+  React.useEffect(() => {
+    // Estado mudou
+  }, [login, data]);
+
   // Fechar dropdown quando clicar fora
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -56,19 +61,22 @@ const Header = () => {
           <h1 className={style.logoText}>Guild System</h1>
         </div>
 
-        <ul className={style.links}>
-          <Link to={"/"} className={style.navLink}>
-            <BossesIcon size={20} />
-            <span>Bosses</span>
-          </Link>
-          <Link to={"/ranking"} className={style.navLink}>
-            <RankingIcon size={20} />
-            <span>Ranking</span>
-          </Link>
-        </ul>
+        {/* Links de navegação - apenas para usuários logados */}
+        {login === true && data !== null && (
+          <ul className={style.links}>
+            <Link to={"/"} className={style.navLink}>
+              <BossesIcon size={20} />
+              <span>Bosses</span>
+            </Link>
+            <Link to={"/ranking"} className={style.navLink}>
+              <RankingIcon size={20} />
+              <span>Ranking</span>
+            </Link>
+          </ul>
+        )}
 
-        {/* Contador de Membros Online */}
-        {guildData && (
+        {/* Contador de Membros Online - apenas para usuários logados */}
+        {login === true && data !== null && guildData && (
           <div className={style.onlineMembers}>
             <UsersIcon size={18} />
             <span className={style.onlineCount}>
@@ -78,7 +86,7 @@ const Header = () => {
         )}
 
         <div className={style.authButtons}>
-          {login && data ? (
+          {login === true && data !== null ? (
             <div className={style.userGreeting} ref={dropdownRef}>
               <div
                 className={style.userInfo}

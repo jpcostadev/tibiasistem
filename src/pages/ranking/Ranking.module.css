@@ -264,10 +264,23 @@
   text-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.1);
 }
 
+.memberRankContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
 .memberRank {
   font-size: 1.2rem;
   color: var(--amarelo-1);
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 0 0 0.5rem rgba(212, 175, 55, 0.3);
+}
+
+.memberRankContainer svg {
+  color: var(--amarelo-1);
+  filter: drop-shadow(0 0 0.3rem rgba(212, 175, 55, 0.5));
 }
 
 .statusDot {
@@ -392,6 +405,15 @@
   font-size: 1.4rem;
   color: var(--branco-1);
   font-weight: 500;
+}
+
+/* Loading Container */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  width: 100%;
 }
 
 /* Modal Styles */

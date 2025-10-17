@@ -15,6 +15,7 @@ interface UserUpdateBody {
   character_name?: string;
   guild_token?: string;
   online?: boolean;
+  rank?: string;
 }
 
 interface ResetPasswordBody {
@@ -122,6 +123,23 @@ export function USER_GET_USERNAME(username: string): ApiRequest {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    },
+  };
+}
+
+// Função para atualizar o rank do usuário
+export function USER_UPDATE_RANK(userId: string, rank: string): ApiRequest {
+  const token = window.localStorage.getItem("token");
+
+  return {
+    url: `${API_URL}/api/user/${userId}`,
+    options: {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ rank }),
     },
   };
 }

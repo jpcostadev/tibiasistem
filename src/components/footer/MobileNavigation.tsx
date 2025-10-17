@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext";
 import {
   BossesIcon,
   TrophyIcon,
@@ -14,6 +15,7 @@ import style from "./MobileNavigation.module.css";
 const MobileNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login, data } = useUser();
 
   const tabs = [
     {
@@ -53,6 +55,11 @@ const MobileNavigation = () => {
     if (path !== "/" && location.pathname.startsWith(path)) return true;
     return false;
   };
+
+  // Só renderiza se o usuário estiver logado
+  if (login !== true || data === null) {
+    return null;
+  }
 
   return (
     <div className={style.mobileNavigation}>

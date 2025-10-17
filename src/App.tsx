@@ -15,22 +15,75 @@ import Container from "./utils/Container";
 import useMedia from "./hooks/useMedia";
 import HeaderMobile from "./components/header/mobile/HeaderMobile";
 import { MobileNavigation } from "./components/footer";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   const isMobile = useMedia("(max-width: 920px)");
-  console.log(isMobile);
   return (
     <BrowserRouter>
       <UserStorage>
         {isMobile ? <HeaderMobile /> : <Header />}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/hunts" element={<Hunts />} />
-          <Route path="/ranking" element={<Ranking />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
+          {/* Rotas Públicas - Redirecionam se já logado */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+
+          {/* Rotas Protegidas */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hunts"
+            element={
+              <ProtectedRoute>
+                <Hunts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ranking"
+            element={
+              <ProtectedRoute>
+                <Ranking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         {isMobile && <MobileNavigation />}
       </UserStorage>

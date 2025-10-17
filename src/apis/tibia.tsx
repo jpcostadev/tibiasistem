@@ -115,13 +115,6 @@ export async function verifyGuildMembership(characterName: string): Promise<{
     const character = data.character.character;
     const isInGuild = character.guild?.name === "New Coorporative";
 
-    // Debug log para mostrar o comentário já na verificação da guilda
-    console.log("=== VERIFICAÇÃO DE GUILDA ===");
-    console.log("Personagem:", character.name);
-    console.log("Guilda:", character.guild?.name);
-    console.log("Comentário atual:", character.comment);
-    console.log("================================");
-
     return {
       success: true,
       isInGuild,
@@ -183,11 +176,6 @@ export async function verifyTokenInComment(
     const cleanToken = token.trim().toUpperCase();
     const cleanComment = character.comment.trim().toUpperCase();
 
-    console.log("🔍 Verificação de Token:");
-    console.log("- Token:", cleanToken);
-    console.log("- Comentário:", cleanComment);
-    console.log("- Match:", cleanComment.includes(cleanToken));
-
     const tokenMatches = cleanComment.includes(cleanToken);
 
     return {
@@ -198,6 +186,67 @@ export async function verifyTokenInComment(
     return {
       success: false,
       tokenMatches: false,
+      error: `Erro na requisição: ${error}`,
+    };
+  }
+}
+
+// Função para verificar personagem e obter rank atual
+export async function verifyCharacterAndGetRank(
+  characterName: string,
+): Promise<{
+  success: boolean;
+  isInGuild: boolean;
+  currentRank?: string;
+  character?: TibiaCharacter;
+  error?: string;
+}> {
+  try {
+    const request = TIBIA_GET_CHARACTER(characterName);
+    const response = await fetch(request.url, request.options);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        isInGuild: false,
+        error: `Erro ao buscar personagem: ${response.status}`,
+      };
+    }
+
+    const data: TibiaApiResponse = await response.json();
+
+    // Verificar se há erro na resposta da API
+    if (data.information.status.http_code !== 200) {
+      return {
+        success: false,
+        isInGuild: false,
+        error: `Erro da API: HTTP ${data.information.status.http_code}`,
+      };
+    }
+
+    // Verificar se o personagem existe
+    if (!data.character || !data.character.character) {
+      return {
+        success: false,
+        isInGuild: false,
+        error: "Personagem não encontrado",
+      };
+    }
+
+    const character = data.character.character;
+    const isInGuild = character.guild?.name === "New Coorporative";
+    const currentRank = character.guild?.rank || "";
+
+    return {
+      success: true,
+      isInGuild,
+      currentRank,
+      character,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      isInGuild: false,
       error: `Erro na requisição: ${error}`,
     };
   }

@@ -14,7 +14,6 @@ const Teste = () => {
       const respose = await fetch("/dados.json");
       const json = await respose.json();
       setJson(json);
-      console.log(json);
     }
     puxarSapoha();
   }, []);

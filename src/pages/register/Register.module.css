@@ -438,3 +438,33 @@
     font-size: 1.1rem;
   }
 }
+
+/* Rank Info Styles */
+.rankInfo {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 0.8rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.rankBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--preto-1);
+  border: 2px solid var(--amarelo-1);
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.rank {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  text-align: center;
+  flex: 1;
+}

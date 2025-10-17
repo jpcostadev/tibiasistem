@@ -28,6 +28,11 @@ const HeaderMobile = () => {
   const userDropdownRef = React.useRef<HTMLDivElement>(null);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
 
+  // Forçar re-render quando login ou data mudarem
+  React.useEffect(() => {
+    // Estado mudou
+  }, [login, data]);
+
   // Fechar dropdown e menu quando clicar fora
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -69,8 +74,8 @@ const HeaderMobile = () => {
           <h1 className={style.logoText}>Guild</h1>
         </div>
 
-        {/* Contador de Membros Online Mobile */}
-        {guildData && (
+        {/* Contador de Membros Online Mobile - apenas para usuários logados */}
+        {login === true && data !== null && guildData && (
           <div className={style.mobileOnlineMembers}>
             <UsersIcon size={16} />
             <span className={style.mobileOnlineCount}>
@@ -90,24 +95,29 @@ const HeaderMobile = () => {
           {openMenu && (
             <div className={style.mobileMenu}>
               <div className={style.mobileLinks}>
-                <Link
-                  onClick={() => setOpenMenu(false)}
-                  to={"/"}
-                  className={style.mobileLink}
-                >
-                  <BossesIcon size={20} />
-                  <span>Bosses</span>
-                </Link>
-                <Link
-                  onClick={() => setOpenMenu(false)}
-                  to={"/ranking"}
-                  className={style.mobileLink}
-                >
-                  <RankingIcon size={20} />
-                  <span>Ranking</span>
-                </Link>
+                {/* Links de navegação - apenas para usuários logados */}
+                {login === true && data !== null && (
+                  <>
+                    <Link
+                      onClick={() => setOpenMenu(false)}
+                      to={"/"}
+                      className={style.mobileLink}
+                    >
+                      <BossesIcon size={20} />
+                      <span>Bosses</span>
+                    </Link>
+                    <Link
+                      onClick={() => setOpenMenu(false)}
+                      to={"/ranking"}
+                      className={style.mobileLink}
+                    >
+                      <RankingIcon size={20} />
+                      <span>Ranking</span>
+                    </Link>
+                  </>
+                )}
 
-                {login && data ? (
+                {login === true && data !== null ? (
                   <div
                     ref={userDropdownRef}
                     className={style.mobileUserSection}

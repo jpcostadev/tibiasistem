@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useUser } from "../../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 
 interface LoginFormData {
@@ -8,7 +9,8 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
-  const { userLogin, loading, error } = useUser();
+  const { userLogin, loading, error, data } = useUser();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
@@ -37,8 +39,14 @@ const Login: React.FC = () => {
 
     try {
       await userLogin(formData.username, formData.password);
+      navigate("/dashboard");
     } catch (err) {
-      setLocalError("Erro ao fazer login. Verifique suas credenciais.");
+      console.error("Erro no login:", err);
+      setLocalError(
+        err instanceof Error
+          ? err.message
+          : "Erro ao fazer login. Verifique suas credenciais.",
+      );
     }
   };
 

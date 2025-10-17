@@ -79,7 +79,6 @@ const Ranking = () => {
   const buscarMembros = async (forceRefresh = false) => {
     try {
       setLoading(true);
-      console.log("Buscando membros, forceRefresh:", forceRefresh);
 
       // Verificar cache primeiro (se não for refresh forçado)
       if (!forceRefresh) {
@@ -88,33 +87,25 @@ const Ranking = () => {
           "members",
         );
         if (cachedMembers && Array.isArray(cachedMembers)) {
-          console.log(
-            "Usando cache, membros encontrados:",
-            cachedMembers.length,
-          );
           setMembros(cachedMembers as Membro[]);
           setLoading(false);
           return;
         }
       }
 
-      console.log("Buscando da API...");
       // Buscar da API
       const resposta = await fetch(URL_API_GUILDA);
       const dados = await resposta.json();
       const membrosDaGuilda: Membro[] = dados.guild.members;
-      console.log("Membros da API:", membrosDaGuilda.length);
 
       // Salvar no cache
       intelligentCache.setItem("guildMembers", "members", membrosDaGuilda);
-      console.log("Salvo no cache");
 
       setMembros(membrosDaGuilda);
-      console.log("Estado atualizado com", membrosDaGuilda.length, "membros");
 
       // Forçar re-render se necessário
       setTimeout(() => {
-        console.log("Estado atual após timeout:", membros.length);
+        // Estado atualizado
       }, 100);
     } catch (erro) {
       console.error("Erro ao buscar membros:", erro);
@@ -126,16 +117,13 @@ const Ranking = () => {
   const handleRefresh = async () => {
     try {
       setRefreshing(true);
-      console.log("Iniciando refresh...");
 
       // Limpar cache do ranking
       intelligentCache.clearCacheByType("guildMembers");
       intelligentCache.clearCacheByType("character");
-      console.log("Cache limpo");
 
       // Buscar membros forçando refresh
       await buscarMembros(true);
-      console.log("Membros atualizados");
     } catch (error) {
       console.error("Erro durante refresh:", error);
     } finally {
@@ -338,11 +326,13 @@ const Ranking = () => {
                 ` (${statusFilter === "online" ? "Online" : "Offline"})`}
             </p>
           </div>
-          <div className={style.cardsGrid}>
-            {refreshing ? (
+          {refreshing ? (
+            <div className={style.loadingContainer}>
               <Loading size="large" text="Atualizando membros..." />
-            ) : (
-              membrosDaPagina.map((membro, indice) => (
+            </div>
+          ) : (
+            <div className={style.cardsGrid}>
+              {membrosDaPagina.map((membro, indice) => (
                 <div key={indice} className={style.memberCard}>
                   <div className={style.cardHeader}>
                     <div className={style.memberInfo}>
@@ -351,12 +341,19 @@ const Ranking = () => {
                       </div>
                       <div className={style.memberDetails}>
                         <h3 className={style.memberName}>{membro.name}</h3>
-                        <p className={style.memberRank}>{membro.rank}</p>
+                        <div className={style.memberRankContainer}>
+                          <TrophyIcon size={14} />
+                          <span className={style.memberRank}>
+                            {membro.rank}
+                          </span>
+                        </div>
                       </div>
                     </div>
                     <div
                       className={style.statusDot}
-                      style={{ backgroundColor: getStatusColor(membro.status) }}
+                      style={{
+                        backgroundColor: getStatusColor(membro.status),
+                      }}
                     ></div>
                   </div>
 
@@ -383,9 +380,9 @@ const Ranking = () => {
                     <span>Ver Detalhes</span>
                   </button>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 

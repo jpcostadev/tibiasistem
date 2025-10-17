@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 // Criação de um contexto para gerenciamento de dados de usuário
 export const UserContext = React.createContext<{
   userLogin: (username: string, password: string) => Promise<void>;
+  userLoginWithRedirect: (username: string, password: string) => Promise<void>;
   setData: React.Dispatch<React.SetStateAction<null>>;
   userLogout: () => void;
   getUser: (token: string) => Promise<void>;
@@ -23,6 +24,7 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
   const [login, setLogin] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
   // Hook de navegação para redirecionar o usuário para diferentes rotas
   const navigate = useNavigate();
 
@@ -64,39 +66,87 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
 
   // Função para fazer logout do usuário
   const userLogout = React.useCallback(async function () {
+    // Limpar todos os estados
     setData(null);
     setError(null);
     setLoading(false);
     setLogin(false);
-    window.localStorage.removeItem("token");
+
+    // Limpar localStorage completamente
+    try {
+      window.localStorage.clear();
+    } catch (error) {
+      // Erro ao limpar localStorage
+    }
+
+    // Limpar sessionStorage também
+    try {
+      const sessionStorageKeys = Object.keys(window.sessionStorage);
+
+      // Limpar cache inteligente especificamente
+      const guildCacheKeys = sessionStorageKeys.filter((key) =>
+        key.startsWith("guild_cache_"),
+      );
+
+      guildCacheKeys.forEach((key) => {
+        window.sessionStorage.removeItem(key);
+      });
+
+      // Limpar sessionStorage completamente
+      window.sessionStorage.clear();
+    } catch (error) {
+      // Erro ao limpar sessionStorage
+    }
+
+    // Limpar cache do navegador se possível
+    if ("caches" in window) {
+      try {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map((cacheName) => caches.delete(cacheName)),
+        );
+      } catch (error) {
+        // Erro ao limpar cache
+      }
+    }
+
+    // Forçar reload da página para garantir limpeza completa
+    window.location.href = "/login";
   }, []);
 
   // Função para buscar dados do usuário usando um token
-  async function getUser(token: string) {
-    const { url, options } = USER_GET(token);
-    const response = await fetch(url, options);
-    const json = await response.json();
-    setData(json);
-    setLogin(true);
-  }
+  const getUser = React.useCallback(
+    async (token: string) => {
+      const { url, options } = USER_GET(token);
+      const response = await fetch(url, options);
 
-  // Função para fazer login do usuário
+      if (!response.ok) {
+        userLogout();
+        return;
+      }
+
+      const json = await response.json();
+
+      if (!json || !json.user_id) {
+        userLogout();
+        return;
+      }
+
+      setData(json);
+      setLogin(true);
+    },
+    [userLogout],
+  );
+
+  // Função para fazer login do usuário (sem redirecionamento)
   async function userLogin(username: string, password: string) {
     try {
       setError(null);
       setLoading(true);
 
-      console.log("🚀 INICIANDO LOGIN...");
-      console.log("Username:", username);
-      console.log("Password:", password);
-
       const { url, options } = TOKEN_POST({ username, password });
-      console.log("URL da requisição:", url);
-      console.log("Options:", options);
 
       const response = await fetch(url, options);
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
 
       if (!response.ok) {
         // Tentar extrair mensagem de erro da resposta
@@ -132,17 +182,13 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
       }
 
       const responseData = await response.json();
-      console.log("Response data:", responseData);
 
       const { token } = responseData;
-      console.log("Token extraído:", token);
 
       window.localStorage.setItem("token", token);
-      console.log("Token salvo no localStorage!");
-      console.log("Token no localStorage:", localStorage.getItem("token"));
 
       await getUser(token);
-      navigate("/dashboard");
+      // Não redireciona aqui - deixa o componente controlar
     } catch (err) {
       console.error("ERRO NO LOGIN:", err);
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -152,6 +198,35 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
     }
   }
 
+  // Função para fazer login com redirecionamento automático
+  async function userLoginWithRedirect(username: string, password: string) {
+    await userLogin(username, password);
+    if (login) {
+      navigate("/dashboard");
+    }
+  }
+
+  // Função para validar se o token ainda é válido
+  const validateToken = async (token: string): Promise<boolean> => {
+    try {
+      const { url, options } = USER_GET(token);
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        return false;
+      }
+
+      const userData = await response.json();
+      if (!userData || !userData.user_id) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   // Hook de efeito para realizar o login automático do usuário se um token estiver armazenado
   React.useEffect(() => {
     async function autoLogin() {
@@ -160,7 +235,15 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
         try {
           setError(null);
           setLoading(true);
-          // Se tem token, busca os dados do usuário diretamente
+
+          // Validar token antes de buscar dados
+          const isTokenValid = await validateToken(token);
+          if (!isTokenValid) {
+            userLogout();
+            return;
+          }
+
+          // Se tem token válido, busca os dados do usuário
           await getUser(token);
         } catch (err) {
           userLogout();
@@ -172,13 +255,41 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
       }
     }
     autoLogin();
-  }, [userLogout]);
+  }, [userLogout, getUser]);
+
+  // Hook para detectar mudanças no localStorage e validar token
+  React.useEffect(() => {
+    const handleStorageChange = async () => {
+      const token = window.localStorage.getItem("token");
+      if (!token && login) {
+        userLogout();
+      } else if (token && login) {
+        // Validar token periodicamente
+        const isTokenValid = await validateToken(token);
+        if (!isTokenValid) {
+          userLogout();
+        }
+      }
+    };
+
+    // Listener para mudanças no localStorage
+    window.addEventListener("storage", handleStorageChange);
+
+    // Validar token a cada 30 segundos se estiver logado
+    const interval = setInterval(handleStorageChange, 30000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [login, userLogout]);
 
   // Fornecimento de dados e funções de contexto para os componentes filhos
   return (
     <UserContext.Provider
       value={{
         userLogin,
+        userLoginWithRedirect,
         setData,
         userLogout,
         getUser,

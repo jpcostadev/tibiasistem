@@ -201,15 +201,10 @@ class IntelligentCache {
         key.includes(`guild_cache_${dataType}`),
       );
 
-      console.log(`Limpando cache do tipo: ${dataType}`);
-      console.log(`Chaves encontradas:`, typeKeys);
-
       typeKeys.forEach((key) => {
         sessionStorage.removeItem(key);
         this.cacheStats.invalidations++;
       });
-
-      console.log(`Cache limpo: ${typeKeys.length} itens removidos`);
     } catch (error) {
       console.warn("Erro ao limpar cache por tipo:", error);
       this.cacheStats.errors++;
@@ -259,7 +254,6 @@ class IntelligentCache {
         }
       });
       this.cacheStats.invalidations += keys.length;
-      console.log("Cache limpo completamente. Chaves removidas:", keys.length);
     } catch (error) {
       console.warn("Erro ao limpar todo o cache:", error);
       this.cacheStats.errors++;

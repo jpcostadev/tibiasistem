@@ -31,7 +31,6 @@ function useFetch<T>(url: RequestInfo | URL, options?: RequestInit) {
         const res = (await req.json()) as T; // Converte para o tipo genérico T
 
         if (!signal.aborted) setData(res); // Se não foi cancelado, atualiza o estado
-        console.log(res); // Log para debug
       } catch (err) {
         // Se ocorreu erro E não foi um cancelamento
         if (!signal.aborted && err instanceof Error) setError(err.message);

@@ -17,6 +17,7 @@ interface RegisterFormData {
   email: string;
   characterName: string;
   guildToken?: string;
+  rank?: string;
 }
 
 const Register: React.FC = () => {
@@ -31,6 +32,7 @@ const Register: React.FC = () => {
     email: "",
     characterName: "",
     guildToken: "",
+    rank: "",
   });
   const [generatedToken, setGeneratedToken] = useState("");
   const [manualToken, setManualToken] = useState("");
@@ -59,22 +61,12 @@ const Register: React.FC = () => {
         email: formData.email,
         character_name: formData.characterName,
         guild_token: token || formData.guildToken || "",
+        rank: formData.rank || "",
       };
 
-      console.log("=== DADOS DO USUÁRIO ===");
-      console.log("Username:", userData.username);
-      console.log("Email:", userData.email);
-      console.log("Character Name:", userData.character_name);
-      console.log("Guild Token:", userData.guild_token);
-      console.log("=========================");
-
       const { url, options } = USER_POST(userData);
-      console.log("URL da requisição:", url);
-      console.log("Options:", options);
 
       const response = await fetch(url, options);
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
 
       if (!response.ok) {
         // Tentar extrair mensagem de erro da resposta
@@ -115,35 +107,28 @@ const Register: React.FC = () => {
       }
 
       const responseData = await response.json();
-      console.log("Usuário criado:", responseData);
 
       // Após criar o usuário, fazer login para obter o token
-      console.log("🚀 Fazendo login para obter token...");
       const { url: tokenUrl, options: tokenOptions } = TOKEN_POST({
         username: formData.username,
         password: formData.password,
       });
 
       const tokenResponse = await fetch(tokenUrl, tokenOptions);
-      console.log("Token response status:", tokenResponse.status);
 
       if (!tokenResponse.ok) {
         throw new Error("Erro ao obter token de autenticação");
       }
 
       const tokenData = await tokenResponse.json();
-      console.log("Token data:", tokenData);
 
       const { token: apiToken } = tokenData;
-      console.log("Token extraído:", apiToken);
 
       if (!apiToken) {
         throw new Error("Token não encontrado na resposta de autenticação");
       }
 
       window.localStorage.setItem("token", apiToken);
-      console.log("Token salvo no localStorage!");
-      console.log("Token no localStorage:", localStorage.getItem("token"));
 
       // Redirecionar para dashboard após sucesso
       navigate("/dashboard");
@@ -214,9 +199,18 @@ const Register: React.FC = () => {
         return;
       }
 
-      // Salvar o comentário do personagem para mostrar no Step 3
+      // Salvar o comentário e rank do personagem para mostrar no Step 3
       if (result.character) {
         setCharacterComment(result.character.comment);
+
+        // Capturar o rank do personagem na guilda
+        const characterRank = result.character.guild?.rank || "";
+
+        // Atualizar o formData com o rank
+        setFormData((prev) => ({
+          ...prev,
+          rank: characterRank,
+        }));
       }
 
       // Perguntar se quer usar token manual ou gerar novo
@@ -260,10 +254,6 @@ const Register: React.FC = () => {
     try {
       const tokenToVerify = useManualToken ? manualToken : generatedToken;
 
-      console.log("🚀 Iniciando validação de token...");
-      console.log("- Token:", tokenToVerify);
-      console.log("- Tipo:", useManualToken ? "Manual" : "Gerado");
-
       const result = await verifyTokenInComment(
         formData.characterName,
         tokenToVerify,
@@ -283,8 +273,6 @@ const Register: React.FC = () => {
 
       // Salvar o token no formData antes de salvar o usuário
       const tokenToSave = useManualToken ? manualToken : generatedToken;
-      console.log("🔑 Token a ser salvo:", tokenToSave);
-      console.log("🔑 Tipo do token:", useManualToken ? "Manual" : "Gerado");
 
       setFormData((prev) => ({
         ...prev,
@@ -473,6 +461,15 @@ const Register: React.FC = () => {
                 >
                   Extrair Token
                 </button>
+              </div>
+            </div>
+          )}
+
+          {formData.rank && (
+            <div className={styles.rankInfo}>
+              <label className={styles.label}>Rank na guilda:</label>
+              <div className={styles.rankBox}>
+                <span className={styles.rank}>{formData.rank}</span>
               </div>
             </div>
           )}

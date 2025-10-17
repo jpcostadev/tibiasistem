@@ -18,6 +18,7 @@ interface UserData {
   email?: string;
   xps?: string;
   cargo?: string;
+  rank?: string;
 }
 
 const Profile: React.FC = () => {
@@ -43,7 +44,6 @@ const Profile: React.FC = () => {
 
   const handleSave = () => {
     // Aqui você implementaria a lógica para salvar as alterações
-    console.log("Salvando dados:", editData);
     setIsEditing(false);
   };
 
@@ -73,9 +73,6 @@ const Profile: React.FC = () => {
 
   const userData: UserData =
     data && typeof data === "object" ? (data as UserData) : {};
-
-  // Debug: verificar os dados do usuário
-  console.log("Dados do usuário:", userData);
 
   return (
     <div className={styles.profileContainer}>
@@ -113,7 +110,9 @@ const Profile: React.FC = () => {
                   <h1 className={styles.userName}>
                     {userData.character_name || userData.username || "Usuário"}
                   </h1>
-                  <p className={styles.userTitle}>Membro da Guilda</p>
+                  <p className={styles.userTitle}>
+                    {userData.rank || "Membro da Guilda"}
+                  </p>
                   <div className={styles.userStatus}>
                     <div className={styles.statusDot}></div>
                     <span>Online</span>
