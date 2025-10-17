@@ -1,65 +1,206 @@
 .headerMobile {
-  position: relative;
-  background-color: var(--preto-1);
   position: fixed;
+  background: linear-gradient(135deg, var(--preto-1), var(--cinza-1));
   width: 100%;
   top: 0;
   left: 0;
+  z-index: 1000;
+  border-bottom: 2px solid var(--amarelo-1);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.3);
 }
+
 .menuMobile {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1.5rem;
-  height: 60px;
+  height: 7rem;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover {
+  transform: scale(1.05);
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #b8941f);
+  border-radius: 50%;
+  color: var(--preto-1);
+  box-shadow: 0 0.4rem 1.2rem rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover .logoIcon {
+  box-shadow: 0 0.6rem 1.8rem rgba(212, 175, 55, 0.5);
+  transform: rotate(10deg);
+}
+
+.logoText {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  text-shadow: 0 0 1rem rgba(212, 175, 55, 0.3);
+  margin: 0;
+  letter-spacing: 0.1rem;
 }
 
 .btnMenu {
-  background: none;
+  background: linear-gradient(135deg, var(--amarelo-1), #b8941f);
   border: none;
-  height: max-content;
-  padding: 0.5rem 1.3rem;
-  background-color: var(--amarelo-1);
+  padding: 1rem;
+  border-radius: 0.8rem;
   color: var(--preto-1);
-  border-radius: 5px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.4rem 1.2rem rgba(212, 175, 55, 0.3);
+}
+
+.btnMenu:hover {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.6rem 1.8rem rgba(212, 175, 55, 0.4);
+}
+
+.btnMenu:active {
+  transform: translateY(0);
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 7rem;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--preto-1), var(--cinza-1));
+  border-top: 2px solid var(--amarelo-1);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.3s ease-out;
+  z-index: 999;
 }
 
 .mobileLinks {
-  position: absolute;
-  width: 80%;
-  top: 60px;
-  right: 0;
-  background-color: var(--preto-1);
-  height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  border-radius: 10px 0 0 10px;
-  padding: 1rem;
-  animation: entrarAnimado 0.5s forwards;
-  z-index: 100;
-}
-.mobileLinks a {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: 0.3s;
-  font-weight: 600;
-}
-.mobileLinks a:hover,
-.mobileLinks a:active {
-  background-color: var(--amarelo-1);
-  border-radius: 50px;
-  color: var(--preto-1);
+  padding: 2rem 1.5rem;
+  gap: 1rem;
 }
 
-@keyframes entrarAnimado {
+.mobileLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  color: var(--branco-1);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.4rem;
+  border-radius: 0.8rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobileLink::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.mobileLink:hover::before {
+  left: 100%;
+}
+
+.mobileLink:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--amarelo-1);
+  transform: translateX(0.5rem);
+}
+
+.mobileLink svg {
+  transition: all 0.3s ease;
+}
+
+.mobileLink:hover svg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 0.4rem rgba(212, 175, 55, 0.6));
+}
+
+.mobileAuthSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.authTitle {
+  font-size: 1.6rem;
+  color: var(--amarelo-1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  text-shadow: 0 0 0.8rem rgba(212, 175, 55, 0.3);
+}
+
+.mobileAuthButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@keyframes slideDown {
   from {
     opacity: 0;
-    right: -100px;
+    transform: translateY(-2rem);
   }
   to {
     opacity: 1;
-    right: 0;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .menuMobile {
+    padding: 0 1rem;
+  }
+
+  .logoText {
+    font-size: 1.8rem;
+  }
+
+  .logoIcon {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .mobileLinks {
+    padding: 1.5rem 1rem;
+  }
+
+  .mobileLink {
+    padding: 1.2rem;
+    font-size: 1.3rem;
   }
 }

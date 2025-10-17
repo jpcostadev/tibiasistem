@@ -1,0 +1,294 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: relative;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.focused {
+  /* Focus state handled by input */
+}
+
+.error {
+  /* Error state handled by input */
+}
+
+.success {
+  /* Success state handled by input */
+}
+
+/* Label */
+.label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--branco-1);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.required {
+  /* Required state handled by asterisk */
+}
+
+.requiredAsterisk {
+  color: var(--vermelho-1);
+  font-weight: 700;
+}
+
+/* Input Wrapper */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border: 2px solid var(--cinza-2);
+  border-radius: 0.8rem;
+  background: var(--preto-1);
+  color: var(--branco-1);
+  font-size: 1.4rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--cinza-2);
+  opacity: 0.8;
+}
+
+.input:focus {
+  border-color: var(--amarelo-1);
+  box-shadow: 0 0 0 0.3rem rgba(212, 175, 55, 0.2);
+}
+
+.input:disabled {
+  background: var(--cinza-1);
+  color: var(--cinza-2);
+  cursor: not-allowed;
+}
+
+/* Variants */
+.default {
+  /* Default styling already applied */
+}
+
+.filled {
+  background: var(--cinza-1);
+  border-color: transparent;
+}
+
+.filled:focus {
+  background: var(--preto-1);
+  border-color: var(--amarelo-1);
+}
+
+.outlined {
+  background: transparent;
+  border-color: var(--amarelo-1);
+}
+
+.outlined:focus {
+  background: rgba(212, 175, 55, 0.05);
+}
+
+/* Sizes */
+.small {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.2rem;
+  min-height: 3.6rem;
+}
+
+.medium {
+  padding: 1.2rem 1.5rem;
+  font-size: 1.4rem;
+  min-height: 4.8rem;
+}
+
+.large {
+  padding: 1.6rem 2rem;
+  font-size: 1.6rem;
+  min-height: 5.6rem;
+}
+
+/* Icons */
+.withLeftIcon {
+  padding-left: 4.5rem;
+}
+
+.withRightIcon {
+  padding-right: 4.5rem;
+}
+
+.withPasswordToggle {
+  padding-right: 4.5rem;
+}
+
+.iconLeft,
+.iconRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cinza-2);
+  font-size: 1.6rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.iconLeft {
+  left: 1.5rem;
+}
+
+.iconRight {
+  right: 1.5rem;
+}
+
+/* Password Toggle */
+.passwordToggle {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--cinza-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.passwordToggle:hover {
+  color: var(--amarelo-1);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.passwordToggle:focus {
+  outline: none;
+  color: var(--amarelo-1);
+  background: rgba(212, 175, 55, 0.2);
+}
+
+/* States */
+.inputContainer.error .input {
+  border-color: var(--vermelho-1);
+  box-shadow: 0 0 0 0.3rem rgba(218, 54, 51, 0.2);
+}
+
+.inputContainer.success .input {
+  border-color: var(--verde-1);
+  box-shadow: 0 0 0 0.3rem rgba(35, 134, 54, 0.2);
+}
+
+.inputContainer.focused .input {
+  border-color: var(--amarelo-1);
+  box-shadow: 0 0 0 0.3rem rgba(212, 175, 55, 0.2);
+}
+
+/* Messages */
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.errorMessage {
+  font-size: 1.2rem;
+  color: var(--vermelho-1);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.errorMessage::before {
+  content: "⚠";
+  font-size: 1.4rem;
+}
+
+.successMessage {
+  font-size: 1.2rem;
+  color: var(--verde-1);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.successMessage::before {
+  content: "✓";
+  font-size: 1.4rem;
+}
+
+.helperText {
+  font-size: 1.2rem;
+  color: var(--cinza-2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .label {
+    font-size: 1.3rem;
+  }
+
+  .small {
+    padding: 0.6rem 1rem;
+    font-size: 1.1rem;
+    min-height: 3.2rem;
+  }
+
+  .medium {
+    padding: 1rem 1.3rem;
+    font-size: 1.3rem;
+    min-height: 4.4rem;
+  }
+
+  .large {
+    padding: 1.4rem 1.8rem;
+    font-size: 1.5rem;
+    min-height: 5.2rem;
+  }
+
+  .withLeftIcon {
+    padding-left: 4rem;
+  }
+
+  .withRightIcon {
+    padding-right: 4rem;
+  }
+
+  .withPasswordToggle {
+    padding-right: 4rem;
+  }
+
+  .iconLeft {
+    left: 1.2rem;
+  }
+
+  .iconRight {
+    right: 1.2rem;
+  }
+
+  .passwordToggle {
+    right: 1.2rem;
+  }
+}

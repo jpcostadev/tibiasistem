@@ -4,29 +4,29 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Header from "./components/header/Header";
 import Ranking from "./pages/ranking/Ranking";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
 import { UiContext } from "./contexts/UiContext";
-import { UserContextProvider } from "./contexts/UserContext";
+import { UserStorage } from "./contexts/UserContext";
 import Container from "./utils/Container";
 import useMedia from "./hooks/useMedia";
 import HeaderMobile from "./components/header/mobile/HeaderMobile";
-import Teste from "./utils/Teste";
 
 function App() {
   const isMobile = useMedia("(max-width: 920px)");
   console.log(isMobile);
   return (
-    <UserContextProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserStorage>
         {isMobile ? <HeaderMobile /> : <Header />}
-        <Container>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/ranking" element={<Ranking />} />
-          </Routes>
-          <Teste />
-        </Container>
-      </BrowserRouter>
-    </UserContextProvider>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </UserStorage>
+    </BrowserRouter>
   );
 }
 

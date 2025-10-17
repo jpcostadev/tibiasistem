@@ -21,6 +21,7 @@ html {
 body {
   background: url("./assets/imgs/tibiaBg.webp") no-repeat center center;
   background-size: cover;
+  background-attachment: fixed;
   color: var(--branco-1);
   font-family: "Poppins", sans-serif;
   font-size: 1.6rem;

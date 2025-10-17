@@ -1,21 +1,151 @@
 .header {
   display: flex;
-  height: 60px;
-  background-color: var(--preto-1);
+  height: 7rem;
+  background: linear-gradient(135deg, var(--preto-1), var(--cinza-1));
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1000;
+  border-bottom: 2px solid var(--amarelo-1);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.3);
 }
+
 .menu {
   display: flex;
   width: 100%;
-  gap: 1rem;
+  gap: 2rem;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14rem;
+  padding: 0 2rem;
 }
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover {
+  transform: scale(1.05);
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #b8941f);
+  border-radius: 50%;
+  color: var(--preto-1);
+  box-shadow: 0 0.4rem 1.2rem rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover .logoIcon {
+  box-shadow: 0 0.6rem 1.8rem rgba(212, 175, 55, 0.5);
+  transform: rotate(10deg);
+}
+
+.logoText {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  text-shadow: 0 0 1rem rgba(212, 175, 55, 0.3);
+  margin: 0;
+  letter-spacing: 0.1rem;
+}
+
 .links {
   display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  color: var(--branco-1);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.4rem;
+  border-radius: 0.8rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.navLink::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.navLink:hover::before {
+  left: 100%;
+}
+
+.navLink:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--amarelo-1);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.4rem 1.2rem rgba(212, 175, 55, 0.2);
+}
+
+.navLink svg {
+  transition: all 0.3s ease;
+}
+
+.navLink:hover svg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 0.4rem rgba(212, 175, 55, 0.6));
+}
+
+.authButtons {
+  display: flex;
   gap: 1rem;
+  align-items: center;
+}
+
+@media (max-width: 920px) {
+  .menu {
+    padding: 0 1rem;
+  }
+
+  .logoText {
+    font-size: 2rem;
+  }
+
+  .logoIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .links {
+    gap: 1rem;
+  }
+
+  .navLink {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  .authButtons {
+    gap: 0.8rem;
+  }
 }

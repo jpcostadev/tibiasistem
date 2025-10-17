@@ -1,0 +1,440 @@
+.registerContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.registerCard {
+  background: var(--cinza-1);
+  border-radius: 1rem;
+  padding: 3rem;
+  width: 100%;
+  max-width: 50rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--cinza-2);
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 1rem rgba(212, 175, 55, 0.3);
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  color: var(--cinza-2);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.stepIndicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  gap: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+.stepNumber {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--cinza-2);
+  color: var(--preto-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+}
+
+.step.active .stepNumber {
+  background: var(--amarelo-1);
+  color: var(--preto-1);
+  box-shadow: 0 0 1rem rgba(212, 175, 55, 0.5);
+}
+
+.stepLabel {
+  font-size: 1.2rem;
+  color: var(--branco-1);
+  font-weight: 500;
+}
+
+.stepContainer {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stepTitle {
+  font-size: 2.2rem;
+  color: var(--branco-1);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.stepDescription {
+  font-size: 1.4rem;
+  color: var(--cinza-2);
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.label {
+  font-size: 1.4rem;
+  color: var(--branco-1);
+  font-weight: 500;
+}
+
+.input {
+  padding: 1.2rem 1.5rem;
+  border: 2px solid var(--cinza-2);
+  border-radius: 0.8rem;
+  background: var(--preto-1);
+  color: var(--branco-1);
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--amarelo-1);
+  box-shadow: 0 0 0 0.3rem rgba(212, 175, 55, 0.2);
+}
+
+.input::placeholder {
+  color: var(--cinza-2);
+}
+
+.button {
+  padding: 1.2rem 2rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #b8941f);
+  color: var(--preto-1);
+  border: none;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.5rem 1.5rem rgba(212, 175, 55, 0.4);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.backButton {
+  padding: 1rem 2rem;
+  background: transparent;
+  color: var(--cinza-2);
+  border: 2px solid var(--cinza-2);
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.backButton:hover {
+  color: var(--branco-1);
+  border-color: var(--branco-1);
+}
+
+.tokenOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tokenOption {
+  background: rgba(212, 175, 55, 0.05);
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.tokenOption:hover {
+  border-color: var(--amarelo-1);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.optionTitle {
+  font-size: 1.8rem;
+  color: var(--amarelo-1);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.optionDescription {
+  font-size: 1.3rem;
+  color: var(--cinza-2);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.optionButton {
+  padding: 1rem 2rem;
+  background: transparent;
+  color: var(--amarelo-1);
+  border: 2px solid var(--amarelo-1);
+  border-radius: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  width: 100%;
+}
+
+.optionButton:hover:not(:disabled) {
+  background: var(--amarelo-1);
+  color: var(--preto-1);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.4rem 1.2rem rgba(212, 175, 55, 0.3);
+}
+
+.optionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.tokenContainer {
+  margin-bottom: 2rem;
+}
+
+.commentInfo {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 0.8rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.commentBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--preto-1);
+  border: 2px solid var(--amarelo-1);
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.comment {
+  font-family: "Courier New", monospace;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--branco-1);
+  letter-spacing: 0.1rem;
+  flex: 1;
+  word-break: break-all;
+}
+
+.extractButton {
+  padding: 0.8rem 1.5rem;
+  background: var(--amarelo-1);
+  color: var(--preto-1);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.extractButton:hover {
+  background: #b8941f;
+  transform: translateY(-0.1rem);
+}
+
+.tokenBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--preto-1);
+  border: 2px solid var(--amarelo-1);
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.token {
+  font-family: "Courier New", monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  letter-spacing: 0.2rem;
+  flex: 1;
+  text-align: center;
+}
+
+.copyButton {
+  padding: 0.8rem 1.5rem;
+  background: var(--amarelo-1);
+  color: var(--preto-1);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copyButton:hover {
+  background: #b8941f;
+  transform: translateY(-0.1rem);
+}
+
+.errorMessage {
+  background: rgba(218, 54, 51, 0.1);
+  border: 2px solid var(--vermelho-1);
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--vermelho-1);
+  font-size: 1.4rem;
+  text-align: center;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-0.5rem);
+  }
+  75% {
+    transform: translateX(0.5rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .registerContainer {
+    padding: 1rem;
+  }
+
+  .registerCard {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .stepIndicator {
+    gap: 1rem;
+  }
+
+  .stepNumber {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .stepLabel {
+    font-size: 1rem;
+  }
+
+  .tokenBox {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .token {
+    font-size: 1.4rem;
+  }
+
+  .tokenOptions {
+    gap: 1.5rem;
+  }
+
+  .tokenOption {
+    padding: 1.5rem;
+  }
+
+  .optionTitle {
+    font-size: 1.6rem;
+  }
+
+  .optionDescription {
+    font-size: 1.2rem;
+  }
+
+  .optionButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+  }
+
+  .commentBox {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .comment {
+    font-size: 1.4rem;
+  }
+
+  .extractButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.1rem;
+  }
+}
