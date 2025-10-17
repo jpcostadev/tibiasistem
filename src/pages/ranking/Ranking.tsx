@@ -1,5 +1,6 @@
 import React from "react";
 import style from "./Ranking.module.css";
+import { useUser } from "../../contexts/UserContext";
 import {
   UserIcon,
   TrophyIcon,
@@ -59,6 +60,7 @@ type CharacterDetails = {
 };
 
 const Ranking = () => {
+  const { login, data } = useUser();
   const [membros, setMembros] = React.useState<Membro[]>([]);
   const [paginaAtual, setPaginaAtual] = React.useState(1);
   const [filtroNome, setFiltroNome] = React.useState("");
@@ -73,8 +75,11 @@ const Ranking = () => {
   const membrosPorPagina = 10;
 
   React.useEffect(() => {
-    buscarMembros();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // Só buscar membros se o usuário estiver logado
+    if (login === true && data !== null) {
+      buscarMembros();
+    }
+  }, [login, data]);
 
   const buscarMembros = async (forceRefresh = false) => {
     try {

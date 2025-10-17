@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import intelligentCache from "../utils/IntelligentCache";
+import { useUser } from "../contexts/UserContext";
 
 interface Membro {
   name: string;
@@ -18,6 +19,7 @@ interface GuildData {
 }
 
 export const useGuildMembers = () => {
+  const { login, data } = useUser();
   const [guildData, setGuildData] = useState<GuildData | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -59,13 +61,19 @@ export const useGuildMembers = () => {
   };
 
   useEffect(() => {
-    fetchGuildData();
+    // Só buscar dados da guilda se o usuário estiver logado
+    if (login === true && data !== null) {
+      fetchGuildData();
 
-    // Atualizar a cada 2 minutos
-    const interval = setInterval(fetchGuildData, 2 * 60 * 1000);
+      // Atualizar a cada 2 minutos
+      const interval = setInterval(fetchGuildData, 2 * 60 * 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearInterval(interval);
+    } else {
+      // Se não estiver logado, limpar dados
+      setGuildData(null);
+    }
+  }, [login, data]);
 
   return {
     guildData,

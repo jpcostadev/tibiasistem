@@ -473,3 +473,25 @@
     justify-content: center;
   }
 }
+
+/* Estilos para o rank */
+.userTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.3);
+}
+
+.rankText {
+  color: #ffd700; /* Amarelo dourado */
+  font-weight: 600;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

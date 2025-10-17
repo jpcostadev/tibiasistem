@@ -7,6 +7,7 @@ import {
   XIcon,
   TrophyIcon,
   MailIcon,
+  RankingIcon,
 } from "../../assets/icons";
 import styles from "./Profile.module.css";
 import Loading from "../../components/ui/Loading";
@@ -25,20 +26,20 @@ const Profile: React.FC = () => {
   const { data } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
-    character_name:
-      data && typeof data === "object" && "character_name" in data
-        ? (data as { character_name: string }).character_name
-        : "",
-    user_email:
-      data && typeof data === "object" && "user_email" in data
-        ? (data as { user_email: string }).user_email
-        : data && typeof data === "object" && "email" in data
-        ? (data as { email: string }).email
-        : "",
-    website: "",
+    character_name: "",
+    user_email: "",
+    username: "",
+    xps: "",
   });
 
   const handleEdit = () => {
+    const userData = data && typeof data === "object" ? (data as UserData) : {};
+    setEditData({
+      character_name: userData.character_name || "",
+      user_email: userData.user_email || userData.email || "",
+      username: userData.username || "",
+      xps: userData.xps || "0",
+    });
     setIsEditing(true);
   };
 
@@ -48,18 +49,12 @@ const Profile: React.FC = () => {
   };
 
   const handleCancel = () => {
+    const userData = data && typeof data === "object" ? (data as UserData) : {};
     setEditData({
-      character_name:
-        data && typeof data === "object" && "character_name" in data
-          ? (data as { character_name: string }).character_name
-          : "",
-      user_email:
-        data && typeof data === "object" && "user_email" in data
-          ? (data as { user_email: string }).user_email
-          : data && typeof data === "object" && "email" in data
-          ? (data as { email: string }).email
-          : "",
-      website: "",
+      character_name: userData.character_name || "",
+      user_email: userData.user_email || userData.email || "",
+      username: userData.username || "",
+      xps: userData.xps || "0",
     });
     setIsEditing(false);
   };
@@ -84,41 +79,19 @@ const Profile: React.FC = () => {
               <UserIcon size={48} />
             </div>
             <div className={styles.avatarInfo}>
-              {isEditing ? (
-                <div className={styles.headerEditFields}>
-                  <input
-                    type="text"
-                    className={styles.headerEditInput}
-                    value={editData.character_name}
-                    onChange={(e) =>
-                      handleInputChange("character_name", e.target.value)
-                    }
-                    placeholder="Nome do Personagem"
-                  />
-                  <input
-                    type="email"
-                    className={styles.headerEditInput}
-                    value={editData.user_email}
-                    onChange={(e) =>
-                      handleInputChange("user_email", e.target.value)
-                    }
-                    placeholder="Email"
-                  />
-                </div>
-              ) : (
-                <>
-                  <h1 className={styles.userName}>
-                    {userData.character_name || userData.username || "Usuário"}
-                  </h1>
-                  <p className={styles.userTitle}>
-                    {userData.rank || "Membro da Guilda"}
-                  </p>
-                  <div className={styles.userStatus}>
-                    <div className={styles.statusDot}></div>
-                    <span>Online</span>
-                  </div>
-                </>
-              )}
+              <h1 className={styles.userName}>
+                {userData.character_name || userData.username || "Usuário"}
+              </h1>
+              <div className={styles.userTitle}>
+                <RankingIcon size={16} />
+                <span className={styles.rankText}>
+                  {userData.rank || "Membro da Guilda"}
+                </span>
+              </div>
+              <div className={styles.userStatus}>
+                <div className={styles.statusDot}></div>
+                <span>Online</span>
+              </div>
             </div>
           </div>
 
@@ -201,9 +174,21 @@ const Profile: React.FC = () => {
                     <TrophyIcon size={24} />
                   </div>
                   <div className={styles.statContent}>
-                    <div className={styles.statValue}>
-                      {userData.xps || "0"}
-                    </div>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className={styles.editInput}
+                        value={editData.xps}
+                        onChange={(e) =>
+                          handleInputChange("xps", e.target.value)
+                        }
+                        placeholder="XP Total"
+                      />
+                    ) : (
+                      <div className={styles.statValue}>
+                        {userData.xps || "0"}
+                      </div>
+                    )}
                     <div className={styles.statLabel}>XP Total</div>
                   </div>
                 </div>
@@ -214,6 +199,25 @@ const Profile: React.FC = () => {
             <div className={styles.profileSection}>
               <h2 className={styles.sectionTitle}>Informações da Conta</h2>
               <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <label className={styles.infoLabel}>Username</label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className={styles.editInput}
+                      value={editData.username}
+                      onChange={(e) =>
+                        handleInputChange("username", e.target.value)
+                      }
+                      placeholder="Username"
+                    />
+                  ) : (
+                    <div className={styles.infoValue}>
+                      <span>{userData.username || "N/A"}</span>
+                    </div>
+                  )}
+                </div>
+
                 <div className={styles.infoItem}>
                   <label className={styles.infoLabel}>Cargo na Guilda</label>
                   <div className={styles.infoValue}>

@@ -61,6 +61,9 @@ class IntelligentCache {
       static: 7 * 24 * 60 * 60 * 1000, // 7 dias
       config: 24 * 60 * 60 * 1000, // 24 horas
 
+      // Verificação de personagem - 3 horas
+      verification: 3 * 60 * 60 * 1000, // 3 horas
+
       // Default
       default: 24 * 60 * 60 * 1000, // 24 horas
     };
