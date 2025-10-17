@@ -4,7 +4,10 @@ import {
   verifyTokenInComment,
   generateGuildToken,
 } from "../../apis/tibia";
+import { USER_POST } from "../../apis/user";
+import { TOKEN_POST } from "../../apis/auth";
 import { useUser } from "../../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 import styles from "./Register.module.css";
 
 interface RegisterFormData {
@@ -17,7 +20,8 @@ interface RegisterFormData {
 }
 
 const Register: React.FC = () => {
-  const { userRegister, loading, error: contextError } = useUser();
+  const { loading, error: contextError } = useUser();
+  const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -46,6 +50,9 @@ const Register: React.FC = () => {
 
   const saveUserWithToken = async (token?: string) => {
     try {
+      setLocalLoading(true);
+      setLocalError("");
+
       const userData = {
         username: formData.username,
         password: formData.password,
@@ -61,9 +68,94 @@ const Register: React.FC = () => {
       console.log("Guild Token:", userData.guild_token);
       console.log("=========================");
 
-      await userRegister(userData);
+      const { url, options } = USER_POST(userData);
+      console.log("URL da requisição:", url);
+      console.log("Options:", options);
+
+      const response = await fetch(url, options);
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
+      if (!response.ok) {
+        // Tentar extrair mensagem de erro da resposta
+        let errorMessage = response.statusText;
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (e) {
+          // Se não conseguir parsear JSON, usar statusText
+        }
+
+        // Mapear códigos de status para mensagens específicas
+        switch (response.status) {
+          case 400:
+            throw new Error(
+              "Limite de registros atingido (máximo 100 usuários)",
+            );
+          case 403:
+            if (errorMessage.includes("Email")) {
+              throw new Error("Este email já está cadastrado no sistema");
+            } else if (errorMessage.includes("Username")) {
+              throw new Error("Este nome de usuário já está em uso");
+            }
+            throw new Error("Acesso negado: " + errorMessage);
+          case 406:
+            throw new Error("Username e senha são obrigatórios");
+          case 500:
+            throw new Error(
+              "Erro interno do servidor. Tente novamente mais tarde",
+            );
+          default:
+            throw new Error(
+              `Erro no registro (${response.status}): ${errorMessage}`,
+            );
+        }
+      }
+
+      const responseData = await response.json();
+      console.log("Usuário criado:", responseData);
+
+      // Após criar o usuário, fazer login para obter o token
+      console.log("🚀 Fazendo login para obter token...");
+      const { url: tokenUrl, options: tokenOptions } = TOKEN_POST({
+        username: formData.username,
+        password: formData.password,
+      });
+
+      const tokenResponse = await fetch(tokenUrl, tokenOptions);
+      console.log("Token response status:", tokenResponse.status);
+
+      if (!tokenResponse.ok) {
+        throw new Error("Erro ao obter token de autenticação");
+      }
+
+      const tokenData = await tokenResponse.json();
+      console.log("Token data:", tokenData);
+
+      const { token: apiToken } = tokenData;
+      console.log("Token extraído:", apiToken);
+
+      if (!apiToken) {
+        throw new Error("Token não encontrado na resposta de autenticação");
+      }
+
+      window.localStorage.setItem("token", apiToken);
+      console.log("Token salvo no localStorage!");
+      console.log("Token no localStorage:", localStorage.getItem("token"));
+
+      // Redirecionar para dashboard após sucesso
+      navigate("/dashboard");
     } catch (err) {
-      setLocalError(`Erro ao salvar usuário: ${err}`);
+      console.error("ERRO NO REGISTRO:", err);
+      setLocalError(
+        `Erro ao salvar usuário: ${
+          err instanceof Error ? err.message : "Erro desconhecido"
+        }`,
+      );
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -312,8 +404,8 @@ const Register: React.FC = () => {
           />
         </div>
 
-        <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Verificando..." : "Verificar Personagem"}
+        <button type="submit" className={styles.button} disabled={localLoading}>
+          {localLoading ? "Verificando..." : "Verificar Personagem"}
         </button>
       </form>
 
@@ -412,9 +504,9 @@ const Register: React.FC = () => {
         <button
           type="submit"
           className={styles.button}
-          disabled={loading || (!generatedToken && !manualToken)}
+          disabled={localLoading || (!generatedToken && !manualToken)}
         >
-          {loading ? "Validando..." : "Validar Token"}
+          {localLoading ? "Validando..." : "Validar Token"}
         </button>
       </form>
 

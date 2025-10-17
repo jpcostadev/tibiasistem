@@ -1,18 +1,11 @@
 import React from "react";
 import { TOKEN_POST, TOKEN_VALIDATE_POST } from "../apis/auth";
-import { USER_GET, USER_POST } from "../apis/user";
+import { USER_GET } from "../apis/user";
 import { useNavigate } from "react-router-dom";
 
 // Criação de um contexto para gerenciamento de dados de usuário
 export const UserContext = React.createContext<{
   userLogin: (username: string, password: string) => Promise<void>;
-  userRegister: (userData: {
-    username: string;
-    password: string;
-    email: string;
-    character_name: string;
-    guild_token: string;
-  }) => Promise<void>;
   setData: React.Dispatch<React.SetStateAction<null>>;
   userLogout: () => void;
   getUser: (token: string) => Promise<void>;
@@ -105,8 +98,38 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
 
-      const errorMessage = response.statusText || "Dados inválidos";
-      if (!response.ok) throw new Error(`Error: ${errorMessage}`);
+      if (!response.ok) {
+        // Tentar extrair mensagem de erro da resposta
+        let errorMessage = response.statusText;
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (e) {
+          // Se não conseguir parsear JSON, usar statusText
+        }
+
+        // Mapear códigos de status para mensagens específicas
+        switch (response.status) {
+          case 401:
+            throw new Error(
+              "Credenciais inválidas. Verifique seu username e senha",
+            );
+          case 403:
+            throw new Error("Acesso negado. Sua conta pode estar suspensa");
+          case 404:
+            throw new Error("Usuário não encontrado");
+          case 500:
+            throw new Error(
+              "Erro interno do servidor. Tente novamente mais tarde",
+            );
+          default:
+            throw new Error(
+              `Erro no login (${response.status}): ${errorMessage}`,
+            );
+        }
+      }
 
       const responseData = await response.json();
       console.log("Response data:", responseData);
@@ -124,53 +147,6 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
       console.error("ERRO NO LOGIN:", err);
       setError(err instanceof Error ? err.message : "Erro desconhecido");
       setLogin(false);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Função para fazer registro do usuário
-  async function userRegister(userData: {
-    username: string;
-    password: string;
-    email: string;
-    character_name: string;
-    guild_token: string;
-  }) {
-    try {
-      setError(null);
-      setLoading(true);
-
-      console.log("🚀 INICIANDO REGISTRO...");
-      console.log("UserData:", userData);
-      console.log("Guild Token:", userData.guild_token);
-
-      const { url, options } = USER_POST(userData);
-      console.log("URL da requisição:", url);
-      console.log("Options:", options);
-
-      const response = await fetch(url, options);
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
-
-      if (!response.ok)
-        throw new Error(`Erro no registro: ${response.statusText}`);
-
-      const newUser = await response.json();
-      console.log("Usuário criado:", newUser);
-
-      window.localStorage.setItem("token", userData.guild_token);
-      console.log("Token salvo no localStorage!");
-      console.log("Token no localStorage:", localStorage.getItem("token"));
-
-      setData(newUser);
-      setLogin(true);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("ERRO NO REGISTRO:", err);
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
-      setLogin(false);
-      throw err;
     } finally {
       setLoading(false);
     }
@@ -203,7 +179,6 @@ export const UserStorage = ({ children }: React.PropsWithChildren) => {
     <UserContext.Provider
       value={{
         userLogin,
-        userRegister,
         setData,
         userLogout,
         getUser,
