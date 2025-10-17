@@ -6,6 +6,8 @@ import Header from "./components/header/Header";
 import Ranking from "./pages/ranking/Ranking";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import Settings from "./pages/settings/Settings";
+import Profile from "./pages/profile/Profile";
 import { UiContext } from "./contexts/UiContext";
 import { UserStorage } from "./contexts/UserContext";
 import Container from "./utils/Container";
@@ -24,6 +26,8 @@ function App() {
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </UserStorage>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./Header.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
 import { useUser } from "../../contexts/UserContext";
 import {
@@ -10,15 +10,43 @@ import {
   LogoutIcon,
   BossesIcon,
   RankingIcon,
+  SettingsIcon,
+  ChevronDownIcon,
+  ProfileIcon,
 } from "../../assets/icons";
 
 const Header = () => {
   const { login, data, userLogout } = useUser();
+  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Fechar dropdown quando clicar fora
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className={style.header}>
       <nav className={`${style.menu} container`}>
-        <div className={style.logoContainer}>
+        <div
+          className={style.logoContainer}
+          onClick={() => navigate("/dashboard")}
+        >
           <div className={style.logoIcon}>
             <BossesIcon size={32} />
           </div>
@@ -38,8 +66,11 @@ const Header = () => {
 
         <div className={style.authButtons}>
           {login && data ? (
-            <div className={style.userGreeting}>
-              <div className={style.userInfo}>
+            <div className={style.userGreeting} ref={dropdownRef}>
+              <div
+                className={style.userInfo}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
                 <UserIcon size={20} />
                 <span className={style.greetingText}>
                   Olá,{" "}
@@ -53,15 +84,48 @@ const Header = () => {
                       : "Usuário"}
                   </span>
                 </span>
+                <ChevronDownIcon
+                  size={16}
+                  className={`${style.chevron} ${
+                    isDropdownOpen ? style.chevronOpen : ""
+                  }`}
+                />
               </div>
-              <Button
-                variant="outline"
-                size="small"
-                onClick={userLogout}
-                icon={<LogoutIcon size={16} />}
-              >
-                Sair
-              </Button>
+
+              {isDropdownOpen && (
+                <div className={style.userDropdown}>
+                  <button
+                    className={style.dropdownItem}
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <ProfileIcon size={16} />
+                    <span>Meu Perfil</span>
+                  </button>
+                  <button
+                    className={style.dropdownItem}
+                    onClick={() => {
+                      navigate("/settings");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <SettingsIcon size={16} />
+                    <span>Configurações</span>
+                  </button>
+                  <button
+                    className={style.dropdownItem}
+                    onClick={() => {
+                      userLogout();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <LogoutIcon size={16} />
+                    <span>Sair</span>
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <>

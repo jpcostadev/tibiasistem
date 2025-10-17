@@ -1,0 +1,475 @@
+.profileContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--preto-1) 0%, var(--cinza-1) 100%);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profileCard {
+  background: linear-gradient(135deg, var(--preto-1), var(--cinza-1));
+  border: 1px solid var(--amarelo-1);
+  border-radius: 1.6rem;
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 100rem;
+  overflow: hidden;
+  animation: slideUp 0.4s ease-out;
+}
+
+.profileHeader {
+  background: linear-gradient(135deg, var(--amarelo-1), var(--amarelo-2));
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.profileHeader::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: shimmer 3s infinite;
+}
+
+.avatarSection {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar {
+  width: 8rem;
+  height: 8rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.3);
+}
+
+.avatar svg {
+  color: var(--branco-1);
+  filter: drop-shadow(0 0.2rem 0.4rem rgba(0, 0, 0, 0.3));
+}
+
+.avatarInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.headerEditFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.headerEditInput {
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.6rem;
+  color: var(--branco-1);
+  font-size: 1.4rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0.1rem 0.3rem rgba(0, 0, 0, 0.2);
+}
+
+.headerEditInput:focus {
+  outline: none;
+  border-color: var(--amarelo-1);
+  box-shadow: inset 0 0.1rem 0.3rem rgba(0, 0, 0, 0.2),
+    0 0 0 0.2rem rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.headerEditInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.userName {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--branco-1);
+  margin: 0;
+  text-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.5);
+}
+
+.userTitle {
+  font-size: 1.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.3);
+}
+
+.userStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.3);
+}
+
+.statusDot {
+  width: 1rem;
+  height: 1rem;
+  background: var(--verde-1);
+  border-radius: 50%;
+  box-shadow: 0 0 0.8rem rgba(56, 139, 253, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.headerActions {
+  position: relative;
+  z-index: 1;
+}
+
+.editButton,
+.saveButton,
+.cancelButton {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2.4rem;
+  border: none;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--branco-1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.3);
+}
+
+.editButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.8rem 2.4rem rgba(255, 255, 255, 0.2);
+  border-color: var(--amarelo-1);
+}
+
+.saveButton {
+  background: var(--verde-1);
+  color: var(--preto-1);
+  margin-right: 1rem;
+}
+
+.saveButton:hover {
+  background: var(--verde-2);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.8rem 2.4rem rgba(56, 139, 253, 0.3);
+}
+
+.cancelButton {
+  background: var(--vermelho-1);
+  color: var(--branco-1);
+}
+
+.cancelButton:hover {
+  background: var(--vermelho-2);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.8rem 2.4rem rgba(220, 38, 38, 0.3);
+}
+
+.editActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.profileContent {
+  padding: 3rem;
+}
+
+.profileGrid {
+  display: grid;
+  gap: 3rem;
+}
+
+.profileSection {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 1.2rem;
+  padding: 2.4rem;
+  transition: all 0.3s ease;
+}
+
+.profileSection:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--amarelo-1);
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.8rem 2.4rem rgba(212, 175, 55, 0.1);
+}
+
+.sectionTitle {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--amarelo-1);
+  margin: 0 0 2.4rem 0;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--amarelo-1);
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 6rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--amarelo-1), transparent);
+}
+
+.infoGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.infoLabel {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--cinza-2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoValue {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.6rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 0.8rem;
+  color: var(--branco-1);
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.infoValue svg {
+  color: var(--amarelo-1);
+  flex-shrink: 0;
+}
+
+.editInput,
+.editTextarea {
+  padding: 1.2rem 1.6rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 0.8rem;
+  color: var(--branco-1);
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.editInput:focus,
+.editTextarea:focus {
+  outline: none;
+  border-color: var(--amarelo-1);
+  box-shadow: 0 0 0 0.3rem rgba(212, 175, 55, 0.2);
+}
+
+.editTextarea {
+  resize: vertical;
+  min-height: 10rem;
+}
+
+.bioText {
+  font-size: 1.6rem;
+  color: var(--branco-1);
+  line-height: 1.6;
+  margin: 0;
+  padding: 1.2rem 1.6rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 0.8rem;
+  min-height: 10rem;
+  display: flex;
+  align-items: center;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 2rem;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.statItem:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--amarelo-1);
+  transform: translateY(-0.2rem);
+}
+
+.statIcon {
+  width: 4.8rem;
+  height: 4.8rem;
+  background: linear-gradient(135deg, var(--amarelo-1), var(--amarelo-2));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statIcon svg {
+  color: var(--branco-1);
+  filter: drop-shadow(0 0.2rem 0.4rem rgba(0, 0, 0, 0.3));
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--branco-1);
+}
+
+.statLabel {
+  font-size: 1.4rem;
+  color: var(--cinza-2);
+  font-weight: 500;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--amarelo-1);
+  border: 1px solid var(--amarelo-1);
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgePremium {
+  background: linear-gradient(135deg, var(--amarelo-1), var(--amarelo-2));
+  color: var(--preto-1);
+  border-color: var(--amarelo-1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profileContainer {
+    padding: 1rem;
+  }
+
+  .profileHeader {
+    padding: 2rem;
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .avatarSection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .userName {
+    font-size: 2.4rem;
+  }
+
+  .profileContent {
+    padding: 2rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .editActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

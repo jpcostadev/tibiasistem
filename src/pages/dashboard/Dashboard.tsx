@@ -3,7 +3,7 @@ import style from "./Dashboard.module.css";
 
 const Dashboard = () => {
   return (
-    <section className={style.dashContainer}>
+    <section className={`${style.dashContainer} container`}>
       <p>Aqui pode vir o que eu quiser</p>
     </section>
   );
