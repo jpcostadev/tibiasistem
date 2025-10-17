@@ -14,13 +14,16 @@ import {
   SettingsIcon,
   ChevronDownIcon,
   ProfileIcon,
+  UsersIcon,
 } from "../../../assets/icons";
+import { useGuildMembers } from "../../../hooks/useGuildMembers";
 
 const HeaderMobile = () => {
   const [openMenu, setOpenMenu] = React.useState<boolean>(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] =
     React.useState<boolean>(false);
   const { login, data, userLogout } = useUser();
+  const { guildData } = useGuildMembers();
   const navigate = useNavigate();
   const userDropdownRef = React.useRef<HTMLDivElement>(null);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
@@ -65,6 +68,16 @@ const HeaderMobile = () => {
           </div>
           <h1 className={style.logoText}>Guild</h1>
         </div>
+
+        {/* Contador de Membros Online Mobile */}
+        {guildData && (
+          <div className={style.mobileOnlineMembers}>
+            <UsersIcon size={16} />
+            <span className={style.mobileOnlineCount}>
+              {guildData.players_online}
+            </span>
+          </div>
+        )}
 
         <div ref={mobileMenuRef}>
           <button

@@ -119,6 +119,35 @@
   filter: drop-shadow(0 0 0.4rem rgba(212, 175, 55, 0.6));
 }
 
+.onlineMembers {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 0.6rem;
+  color: #4ade80;
+  font-size: 1.3rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.onlineMembers:hover {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.5);
+  transform: translateY(-0.1rem);
+}
+
+.onlineMembers svg {
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.onlineCount {
+  white-space: nowrap;
+}
+
 .authButtons {
   display: flex;
   gap: 1rem;
@@ -286,5 +315,14 @@
 
   .authButtons {
     gap: 0.8rem;
+  }
+
+  .onlineMembers {
+    padding: 0.6rem 1rem;
+    font-size: 1.2rem;
+  }
+
+  .onlineCount {
+    font-size: 1.1rem;
   }
 }

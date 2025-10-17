@@ -13,10 +13,13 @@ import {
   SettingsIcon,
   ChevronDownIcon,
   ProfileIcon,
+  UsersIcon,
 } from "../../assets/icons";
+import { useGuildMembers } from "../../hooks/useGuildMembers";
 
 const Header = () => {
   const { login, data, userLogout } = useUser();
+  const { guildData, loading: guildLoading } = useGuildMembers();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -63,6 +66,16 @@ const Header = () => {
             <span>Ranking</span>
           </Link>
         </ul>
+
+        {/* Contador de Membros Online */}
+        {guildData && (
+          <div className={style.onlineMembers}>
+            <UsersIcon size={18} />
+            <span className={style.onlineCount}>
+              {guildData.players_online} online
+            </span>
+          </div>
+        )}
 
         <div className={style.authButtons}>
           {login && data ? (

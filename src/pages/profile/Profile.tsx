@@ -9,6 +9,7 @@ import {
   MailIcon,
 } from "../../assets/icons";
 import styles from "./Profile.module.css";
+import Loading from "../../components/ui/Loading";
 
 interface UserData {
   character_name?: string;

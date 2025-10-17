@@ -20,3 +20,7 @@ export { default as MapPinIcon } from "./MapPinIcon";
 export { default as MailIcon } from "./MailIcon";
 export { default as SwordIcon } from "./SwordIcon";
 export { default as EyeIcon } from "./EyeIcon";
+export { default as RefreshIcon } from "./RefreshIcon";
+export { default as UsersIcon } from "./UsersIcon";
+export { default as HomeIcon } from "./HomeIcon";
+export { default as SkullIcon } from "./SkullIcon";

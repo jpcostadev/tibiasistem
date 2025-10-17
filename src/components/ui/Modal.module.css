@@ -1,0 +1,141 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.modal {
+  background: linear-gradient(135deg, var(--preto-1), var(--cinza-1));
+  border: 2px solid var(--amarelo-1);
+  border-radius: 1.2rem;
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.5);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 50rem;
+}
+
+.modal.small {
+  max-width: 40rem;
+}
+
+.modal.medium {
+  max-width: 50rem;
+}
+
+.modal.large {
+  max-width: 70rem;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem 2rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--amarelo-1);
+  text-shadow: 0 0 1rem rgba(212, 175, 55, 0.5);
+  margin: 0;
+}
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--branco-1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--amarelo-1);
+  transform: scale(1.1);
+}
+
+.closeButton svg {
+  color: var(--branco-1);
+}
+
+.modalContent {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  color: var(--branco-1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 1rem;
+  }
+
+  .modal {
+    max-height: 95vh;
+    max-width: 100%;
+  }
+
+  .modalHeader {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .modalTitle {
+    font-size: 2rem;
+  }
+
+  .closeButton {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .modalContent {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalOverlay {
+    padding: 0.5rem;
+  }
+
+  .modalHeader {
+    padding: 1rem 1rem 0.5rem 1rem;
+  }
+
+  .modalTitle {
+    font-size: 1.8rem;
+  }
+
+  .closeButton {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .modalContent {
+    padding: 1rem;
+  }
+}

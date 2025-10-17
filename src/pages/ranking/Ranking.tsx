@@ -6,7 +6,11 @@ import {
   SwordIcon,
   ShieldIcon,
   EyeIcon,
+  RefreshIcon,
 } from "../../assets/icons";
+import intelligentCache from "../../utils/IntelligentCache";
+import Loading from "../../components/ui/Loading";
+import Modal from "../../components/ui/Modal";
 
 const URL_API_GUILDA = "https://api.tibiadata.com/v4/guild/New Coorporative";
 const URL_API_CHARACTER = "https://api.tibiadata.com/v4/character";
@@ -62,29 +66,104 @@ const Ranking = () => {
     React.useState<CharacterDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const membrosPorPagina = 12;
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [statusFilter, setStatusFilter] = React.useState<
+    "all" | "online" | "offline"
+  >("all");
+  const membrosPorPagina = 10;
 
   React.useEffect(() => {
-    async function buscarMembros() {
-      try {
-        setLoading(true);
-        const resposta = await fetch(URL_API_GUILDA);
-        const dados = await resposta.json();
-        const membrosDaGuilda: Membro[] = dados.guild.members;
-        setMembros(membrosDaGuilda);
-      } catch (erro) {
-        console.error("Erro ao buscar membros:", erro);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     buscarMembros();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const buscarMembros = async (forceRefresh = false) => {
+    try {
+      setLoading(true);
+      console.log("Buscando membros, forceRefresh:", forceRefresh);
+
+      // Verificar cache primeiro (se não for refresh forçado)
+      if (!forceRefresh) {
+        const cachedMembers = intelligentCache.getItem(
+          "guildMembers",
+          "members",
+        );
+        if (cachedMembers && Array.isArray(cachedMembers)) {
+          console.log(
+            "Usando cache, membros encontrados:",
+            cachedMembers.length,
+          );
+          setMembros(cachedMembers as Membro[]);
+          setLoading(false);
+          return;
+        }
+      }
+
+      console.log("Buscando da API...");
+      // Buscar da API
+      const resposta = await fetch(URL_API_GUILDA);
+      const dados = await resposta.json();
+      const membrosDaGuilda: Membro[] = dados.guild.members;
+      console.log("Membros da API:", membrosDaGuilda.length);
+
+      // Salvar no cache
+      intelligentCache.setItem("guildMembers", "members", membrosDaGuilda);
+      console.log("Salvo no cache");
+
+      setMembros(membrosDaGuilda);
+      console.log("Estado atualizado com", membrosDaGuilda.length, "membros");
+
+      // Forçar re-render se necessário
+      setTimeout(() => {
+        console.log("Estado atual após timeout:", membros.length);
+      }, 100);
+    } catch (erro) {
+      console.error("Erro ao buscar membros:", erro);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      console.log("Iniciando refresh...");
+
+      // Limpar cache do ranking
+      intelligentCache.clearCacheByType("guildMembers");
+      intelligentCache.clearCacheByType("character");
+      console.log("Cache limpo");
+
+      // Buscar membros forçando refresh
+      await buscarMembros(true);
+      console.log("Membros atualizados");
+    } catch (error) {
+      console.error("Erro durante refresh:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const buscarDetalhesPersonagem = async (nome: string) => {
     try {
       setLoading(true);
+
+      // Verificar cache primeiro
+      const cachedCharacter = intelligentCache.getItem(
+        "characterDetails",
+        nome,
+      );
+      if (
+        cachedCharacter &&
+        typeof cachedCharacter === "object" &&
+        cachedCharacter !== null
+      ) {
+        setSelectedCharacter(cachedCharacter as CharacterDetails);
+        setIsModalOpen(true);
+        setLoading(false);
+        return;
+      }
+
+      // Buscar da API
       const resposta = await fetch(`${URL_API_CHARACTER}/${nome}`);
       const dados = await resposta.json();
 
@@ -108,6 +187,9 @@ const Ranking = () => {
           achievements: dados.character.achievements || [],
         };
 
+        // Salvar no cache
+        intelligentCache.setItem("characterDetails", nome, characterDetails);
+
         setSelectedCharacter(characterDetails);
         setIsModalOpen(true);
       }
@@ -118,9 +200,17 @@ const Ranking = () => {
     }
   };
 
-  const membrosFiltrados = membros.filter((membro) =>
-    membro.name.toLowerCase().includes(filtroNome.toLowerCase()),
-  );
+  const membrosFiltrados = membros.filter((membro) => {
+    const nomeMatch = membro.name
+      .toLowerCase()
+      .includes(filtroNome.toLowerCase());
+    const statusMatch =
+      statusFilter === "all" ||
+      (statusFilter === "online" && membro.status === "online") ||
+      (statusFilter === "offline" && membro.status === "offline");
+
+    return nomeMatch && statusMatch;
+  });
 
   const indiceUltimoMembro = paginaAtual * membrosPorPagina;
   const indicePrimeiroMembro = indiceUltimoMembro - membrosPorPagina;
@@ -131,10 +221,18 @@ const Ranking = () => {
 
   const totalPaginas = Math.ceil(membrosFiltrados.length / membrosPorPagina);
 
-  // Sempre volta para a página 1 ao digitar no filtro
+  // Sempre volta para a página 1 ao digitar no filtro ou mudar status
   React.useEffect(() => {
     setPaginaAtual(1);
-  }, [filtroNome]);
+  }, [filtroNome, statusFilter]);
+
+  // Scroll para o topo ao trocar de página
+  React.useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [paginaAtual]);
 
   const getVocationIcon = (vocation: string) => {
     switch (vocation.toLowerCase()) {
@@ -157,70 +255,138 @@ const Ranking = () => {
   return (
     <div className={style.container}>
       <div className={style.header}>
-        <h1 className={style.title}>Ranking da Guilda</h1>
-        <p className={style.subtitle}>Lista de membros da guilda</p>
+        <div className={style.headerContent}>
+          <div className={style.headerText}>
+            <h1 className={style.title}>Ranking da Guilda</h1>
+            <p className={style.subtitle}>Lista de membros da guilda</p>
+          </div>
+          <button
+            className={style.refreshButton}
+            onClick={handleRefresh}
+            disabled={refreshing || loading}
+          >
+            <RefreshIcon size={20} />
+            <span>
+              {refreshing
+                ? "Atualizando..."
+                : loading
+                ? "Carregando..."
+                : "Atualizar"}
+            </span>
+          </button>
+        </div>
       </div>
 
       <div className={style.filtroContainer}>
-        <input
-          type="text"
-          placeholder="Filtrar por nome..."
-          value={filtroNome}
-          onChange={(e) => setFiltroNome(e.target.value)}
-          className={style.inputFiltro}
-        />
+        <div className={style.filtroWrapper}>
+          <input
+            type="text"
+            placeholder="Filtrar por nome..."
+            value={filtroNome}
+            onChange={(e) => setFiltroNome(e.target.value)}
+            className={style.inputFiltro}
+          />
+
+          <div className={style.statusFilters}>
+            <button
+              className={`${style.statusFilter} ${
+                statusFilter === "all" ? style.statusFilterActive : ""
+              }`}
+              onClick={() => setStatusFilter("all")}
+              data-mobile-text="Todos"
+            >
+              <span>Todos</span>
+            </button>
+            <button
+              className={`${style.statusFilter} ${
+                statusFilter === "online" ? style.statusFilterActive : ""
+              }`}
+              onClick={() => setStatusFilter("online")}
+              data-mobile-text="Online"
+            >
+              <div
+                className={style.statusDot}
+                style={{ backgroundColor: "#4ade80" }}
+              ></div>
+              <span>Online</span>
+            </button>
+            <button
+              className={`${style.statusFilter} ${
+                statusFilter === "offline" ? style.statusFilterActive : ""
+              }`}
+              onClick={() => setStatusFilter("offline")}
+              data-mobile-text="Offline"
+            >
+              <div
+                className={style.statusDot}
+                style={{ backgroundColor: "#6b7280" }}
+              ></div>
+              <span>Offline</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {loading && membros.length === 0 ? (
-        <div className={style.loading}>
-          <div className={style.spinner}></div>
-          <p>Carregando membros...</p>
-        </div>
+        <Loading size="large" text="Carregando membros..." />
       ) : (
-        <div className={style.cardsGrid}>
-          {membrosDaPagina.map((membro, indice) => (
-            <div key={indice} className={style.memberCard}>
-              <div className={style.cardHeader}>
-                <div className={style.memberInfo}>
-                  <div className={style.avatar}>
-                    <UserIcon size={24} />
+        <>
+          <div className={style.resultsInfo}>
+            <p className={style.resultsText}>
+              Mostrando {membrosFiltrados.length} de {membros.length} membros
+              {statusFilter !== "all" &&
+                ` (${statusFilter === "online" ? "Online" : "Offline"})`}
+            </p>
+          </div>
+          <div className={style.cardsGrid}>
+            {refreshing ? (
+              <Loading size="large" text="Atualizando membros..." />
+            ) : (
+              membrosDaPagina.map((membro, indice) => (
+                <div key={indice} className={style.memberCard}>
+                  <div className={style.cardHeader}>
+                    <div className={style.memberInfo}>
+                      <div className={style.avatar}>
+                        <UserIcon size={24} />
+                      </div>
+                      <div className={style.memberDetails}>
+                        <h3 className={style.memberName}>{membro.name}</h3>
+                        <p className={style.memberRank}>{membro.rank}</p>
+                      </div>
+                    </div>
+                    <div
+                      className={style.statusDot}
+                      style={{ backgroundColor: getStatusColor(membro.status) }}
+                    ></div>
                   </div>
-                  <div className={style.memberDetails}>
-                    <h3 className={style.memberName}>{membro.name}</h3>
-                    <p className={style.memberRank}>{membro.rank}</p>
+
+                  <div className={style.cardContent}>
+                    <div className={style.statItem}>
+                      <TrophyIcon size={16} />
+                      <span className={style.statLabel}>Level</span>
+                      <span className={style.statValue}>{membro.level}</span>
+                    </div>
+
+                    <div className={style.statItem}>
+                      {getVocationIcon(membro.vocation)}
+                      <span className={style.statLabel}>Vocation</span>
+                      <span className={style.statValue}>{membro.vocation}</span>
+                    </div>
                   </div>
-                </div>
-                <div
-                  className={style.statusDot}
-                  style={{ backgroundColor: getStatusColor(membro.status) }}
-                ></div>
-              </div>
 
-              <div className={style.cardContent}>
-                <div className={style.statItem}>
-                  <TrophyIcon size={16} />
-                  <span className={style.statLabel}>Level</span>
-                  <span className={style.statValue}>{membro.level}</span>
+                  <button
+                    className={style.viewButton}
+                    onClick={() => buscarDetalhesPersonagem(membro.name)}
+                    disabled={loading}
+                  >
+                    <EyeIcon size={16} />
+                    <span>Ver Detalhes</span>
+                  </button>
                 </div>
-
-                <div className={style.statItem}>
-                  {getVocationIcon(membro.vocation)}
-                  <span className={style.statLabel}>Vocation</span>
-                  <span className={style.statValue}>{membro.vocation}</span>
-                </div>
-              </div>
-
-              <button
-                className={style.viewButton}
-                onClick={() => buscarDetalhesPersonagem(membro.name)}
-                disabled={loading}
-              >
-                <EyeIcon size={16} />
-                <span>Ver Detalhes</span>
-              </button>
-            </div>
-          ))}
-        </div>
+              ))
+            )}
+          </div>
+        </>
       )}
 
       <div className={style.pagination}>
@@ -252,88 +418,74 @@ const Ranking = () => {
       </div>
 
       {/* Modal de Detalhes */}
-      {isModalOpen && selectedCharacter && (
-        <div
-          className={style.modalOverlay}
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div className={style.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={style.modalHeader}>
-              <h2 className={style.modalTitle}>{selectedCharacter.name}</h2>
-              <button
-                className={style.closeButton}
-                onClick={() => setIsModalOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            <div className={style.modalContent}>
-              <div className={style.characterInfo}>
-                <div className={style.infoGrid}>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>Level</span>
-                    <span className={style.infoValue}>
-                      {selectedCharacter.level}
-                    </span>
-                  </div>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>Vocation</span>
-                    <span className={style.infoValue}>
-                      {selectedCharacter.vocation}
-                    </span>
-                  </div>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>World</span>
-                    <span className={style.infoValue}>
-                      {selectedCharacter.world}
-                    </span>
-                  </div>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>Residence</span>
-                    <span className={style.infoValue}>
-                      {selectedCharacter.residence}
-                    </span>
-                  </div>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>Last Login</span>
-                    <span className={style.infoValue}>
-                      {new Date(
-                        selectedCharacter.last_login,
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className={style.infoItem}>
-                    <span className={style.infoLabel}>Achievement Points</span>
-                    <span className={style.infoValue}>
-                      {selectedCharacter.achievement_points}
-                    </span>
-                  </div>
-                </div>
-
-                {selectedCharacter.comment && (
-                  <div className={style.commentSection}>
-                    <h3>Comment</h3>
-                    <p>{selectedCharacter.comment}</p>
-                  </div>
-                )}
-
-                {selectedCharacter.houses.length > 0 && (
-                  <div className={style.housesSection}>
-                    <h3>Houses</h3>
-                    {selectedCharacter.houses.map((house, index) => (
-                      <div key={index} className={style.houseItem}>
-                        <span className={style.houseName}>{house.name}</span>
-                        <span className={style.houseTown}>{house.town}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={selectedCharacter?.name || ""}
+        size="medium"
+      >
+        {selectedCharacter && (
+          <div className={style.characterInfo}>
+            <div className={style.infoGrid}>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Level</span>
+                <span className={style.infoValue}>
+                  {selectedCharacter.level}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Vocation</span>
+                <span className={style.infoValue}>
+                  {selectedCharacter.vocation}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>World</span>
+                <span className={style.infoValue}>
+                  {selectedCharacter.world}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Residence</span>
+                <span className={style.infoValue}>
+                  {selectedCharacter.residence}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Last Login</span>
+                <span className={style.infoValue}>
+                  {new Date(selectedCharacter.last_login).toLocaleDateString()}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Achievement Points</span>
+                <span className={style.infoValue}>
+                  {selectedCharacter.achievement_points}
+                </span>
               </div>
             </div>
+
+            {selectedCharacter.comment && (
+              <div className={style.commentSection}>
+                <h3>Comment</h3>
+                <p>{selectedCharacter.comment}</p>
+              </div>
+            )}
+
+            {selectedCharacter.houses.length > 0 && (
+              <div className={style.housesSection}>
+                <h3>Houses</h3>
+                {selectedCharacter.houses.map((house, index) => (
+                  <div key={index} className={style.houseItem}>
+                    <span className={style.houseName}>{house.name}</span>
+                    <span className={style.houseTown}>{house.town}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
     </div>
   );
 };

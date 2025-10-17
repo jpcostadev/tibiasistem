@@ -28,6 +28,12 @@ body {
   padding-top: 7rem;
 }
 
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 8rem; /* Espaço para o menu mobile */
+  }
+}
+
 ul {
   list-style: none;
 }
