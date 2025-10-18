@@ -1,5 +1,6 @@
 import React from "react";
 import { UserIcon, EditIcon, TrashIcon, XIcon } from "../../assets/icons";
+import useDisableScroll from "../../hooks/useDisableScroll";
 import styles from "./UserAdminModal.module.css";
 
 interface User {
@@ -29,6 +30,9 @@ const UserAdminModal: React.FC<UserAdminModalProps> = ({
   onEdit,
   onDelete,
 }) => {
+  // Desabilita scroll quando modal estiver aberto
+  useDisableScroll(isVisible);
+
   if (!isVisible || !user) return null;
 
   const handleEdit = () => {

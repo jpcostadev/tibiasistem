@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./Ranking.module.css";
 import { useUser } from "../../contexts/UserContext";
+import useMedia from "../../hooks/useMedia";
 import {
   UserIcon,
   TrophyIcon,
@@ -62,6 +63,7 @@ type CharacterDetails = {
 
 const Ranking = () => {
   const { login, data } = useUser();
+  const isMobile = useMedia("(max-width: 768px)");
   const [membros, setMembros] = React.useState<Membro[]>([]);
   const [paginaAtual, setPaginaAtual] = React.useState(1);
   const [filtroNome, setFiltroNome] = React.useState("");
@@ -220,13 +222,15 @@ const Ranking = () => {
     setPaginaAtual(1);
   }, [filtroNome, statusFilter]);
 
-  // Scroll para o topo ao trocar de página
+  // Scroll para o topo ao trocar de página (apenas no mobile)
   React.useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [paginaAtual]);
+    if (isMobile) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [paginaAtual, isMobile]);
 
   const getVocationIcon = (vocation: string) => {
     switch (vocation.toLowerCase()) {

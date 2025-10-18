@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./VerificationModal.module.css";
 import { TIBIA_GET_CHARACTER } from "../../apis/tibia";
 import intelligentCache from "../../utils/IntelligentCache";
+import useDisableScroll from "../../hooks/useDisableScroll";
 
 interface VerificationStep {
   id: string;
@@ -23,6 +24,9 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   onSuccess,
   onError,
 }) => {
+  // Desabilita scroll quando modal estiver aberto
+  useDisableScroll(isVisible);
+
   const [steps, setSteps] = useState<VerificationStep[]>([
     {
       id: "character",

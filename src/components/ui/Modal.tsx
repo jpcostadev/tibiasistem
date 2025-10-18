@@ -1,5 +1,6 @@
 import React from "react";
 import { XIcon } from "../../assets/icons";
+import useDisableScroll from "../../hooks/useDisableScroll";
 import style from "./Modal.module.css";
 
 interface ModalProps {
@@ -17,6 +18,9 @@ const Modal: React.FC<ModalProps> = ({
   children,
   size = "medium",
 }) => {
+  // Desabilita scroll quando modal estiver aberto
+  useDisableScroll(isOpen);
+
   if (!isOpen) return null;
 
   return (
