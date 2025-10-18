@@ -14,6 +14,7 @@ import {
   ChevronDownIcon,
   ProfileIcon,
   UsersIcon,
+  ShieldIcon,
 } from "../../assets/icons";
 import { useGuildMembers } from "../../hooks/useGuildMembers";
 
@@ -135,6 +136,24 @@ const Header = () => {
                     <SettingsIcon size={16} />
                     <span>Configurações</span>
                   </button>
+                  {/* Link Admin - apenas para usuários admin */}
+                  {data &&
+                    typeof data === "object" &&
+                    (("cargo" in data &&
+                      (data as any).cargo === "administrador") ||
+                      ("role" in data &&
+                        (data as any).role === "administrator")) && (
+                      <button
+                        className={style.dropdownItem}
+                        onClick={() => {
+                          navigate("/admin");
+                          setIsDropdownOpen(false);
+                        }}
+                      >
+                        <ShieldIcon size={16} />
+                        <span>Admin</span>
+                      </button>
+                    )}
                   <button
                     className={style.dropdownItem}
                     onClick={() => {

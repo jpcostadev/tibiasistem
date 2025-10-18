@@ -1,0 +1,236 @@
+/* Modal de Usuário */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.userModal {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  padding: 3rem;
+  max-width: 60rem;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2.4rem 6.4rem rgba(0, 0, 0, 0.6);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.4rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalHeader h2 {
+  font-size: 2.4rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #f4d03f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-weight: 700;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: scale(1.1);
+}
+
+.modalBody {
+  margin-bottom: 2.4rem;
+}
+
+.userModalInfo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.4rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.userModalAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+  height: 8rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #f4d03f);
+  border-radius: 50%;
+  color: #000;
+}
+
+.userModalDetails h3 {
+  font-size: 2.4rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 0.8rem 0;
+  font-weight: 700;
+}
+
+.userModalCharacter {
+  font-size: 1.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 1.2rem 0;
+}
+
+.userModalInfoGrid {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.infoValue {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.cargoBadge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, var(--amarelo-1), #f4d03f);
+  color: #000;
+  border-radius: 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.statusBadge.active {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.statusBadge.banned {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.statusBadge.inactive {
+  background: #6b7280;
+  color: #ffffff;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1.6rem;
+  justify-content: flex-end;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalActions button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2.4rem;
+  border: none;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editButton {
+  background: linear-gradient(135deg, var(--azul-1), #2563eb);
+  color: white;
+}
+
+.editButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.8rem 2.4rem rgba(59, 130, 246, 0.3);
+}
+
+.deleteButton {
+  background: linear-gradient(135deg, var(--vermelho-1), #dc2626);
+  color: white;
+}
+
+.deleteButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.8rem 2.4rem rgba(239, 68, 68, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userModal {
+    padding: 2rem;
+    margin: 1rem;
+  }
+
+  .userModalInfo {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.6rem;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
+
+  .modalActions button {
+    width: 100%;
+  }
+}

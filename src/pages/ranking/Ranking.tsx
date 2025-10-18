@@ -8,6 +8,7 @@ import {
   ShieldIcon,
   EyeIcon,
   RefreshIcon,
+  RankingIcon,
 } from "../../assets/icons";
 import intelligentCache from "../../utils/IntelligentCache";
 import Loading from "../../components/ui/Loading";
@@ -463,6 +464,15 @@ const Ranking = () => {
                 <span className={style.infoLabel}>Achievement Points</span>
                 <span className={style.infoValue}>
                   {selectedCharacter.achievement_points}
+                </span>
+              </div>
+              <div className={style.infoItem}>
+                <span className={style.infoLabel}>Guild Rank</span>
+                <span className={style.infoValue}>
+                  <RankingIcon size={16} />
+                  <span className={style.rankText}>
+                    {selectedCharacter.guild?.rank || "N/A"}
+                  </span>
                 </span>
               </div>
             </div>

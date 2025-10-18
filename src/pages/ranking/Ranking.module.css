@@ -636,3 +636,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Estilos para o rank no modal */
+.infoValue {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.6rem;
+  color: var(--branco-1);
+  font-weight: 500;
+}
+
+.rankText {
+  color: #ffd700; /* Amarelo dourado */
+  font-weight: 600;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.5);
+  background: linear-gradient(45deg, #ffd700, #ffa500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

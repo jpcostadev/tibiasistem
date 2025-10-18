@@ -14,6 +14,8 @@ export { default as PaletteIcon } from "./PaletteIcon";
 export { default as EditIcon } from "./EditIcon";
 export { default as SaveIcon } from "./SaveIcon";
 export { default as XIcon } from "./XIcon";
+export { default as TrashIcon } from "./TrashIcon";
+export { default as PlusIcon } from "./PlusIcon";
 export { default as TrophyIcon } from "./TrophyIcon";
 export { default as CalendarIcon } from "./CalendarIcon";
 export { default as MapPinIcon } from "./MapPinIcon";

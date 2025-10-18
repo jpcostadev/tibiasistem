@@ -9,6 +9,7 @@ import Register from "./pages/register/Register";
 import Settings from "./pages/settings/Settings";
 import Profile from "./pages/profile/Profile";
 import Hunts from "./pages/hunts/Hunts";
+import Admin from "./pages/admin/Admin";
 import { UiContext } from "./contexts/UiContext";
 import { UserStorage } from "./contexts/UserContext";
 import Container from "./utils/Container";
@@ -81,6 +82,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
               </ProtectedRoute>
             }
           />
